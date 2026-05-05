@@ -1,0 +1,209 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans-ui: "Noto Sans KR", "Pretendard", "Malgun Gothic", sans-serif;
+  --font-mono-ui: "JetBrains Mono", "D2Coding", "Fira Code", Consolas, monospace;
+  --color-canvas: #f6f7f9;
+  --color-surface: rgba(255, 255, 255, 0.94);
+  --color-surface-strong: #ffffff;
+  --color-surface-muted: #f1f5f4;
+  --color-line: rgba(27, 36, 34, 0.12);
+  --color-line-strong: rgba(27, 36, 34, 0.24);
+  --color-ink: #17201c;
+  --color-muted: #5c6763;
+  --color-accent: #0f766e;
+  --color-accent-soft: #dff3ef;
+  --color-success: #287947;
+  --color-success-soft: #e4f4e9;
+  --color-warning: #9a6700;
+  --color-warning-soft: #fff2c8;
+  --color-danger: #b42318;
+  --color-danger-soft: #fde7e3;
+  --color-info: #2563eb;
+  --color-info-soft: #e7efff;
+  --color-shadow: 0 18px 42px rgba(22, 32, 28, 0.08);
+}
+
+@theme inline {
+  --color-background: var(--color-canvas);
+  --color-foreground: var(--color-ink);
+  --font-sans: var(--font-sans-ui);
+  --font-mono: var(--font-mono-ui);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans-ui);
+}
+
+::selection {
+  background: rgba(12, 107, 103, 0.18);
+}
+
+textarea,
+code,
+pre {
+  font-family: var(--font-mono-ui);
+}
+
+textarea {
+  resize: vertical;
+}
+
+.app-shell {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(246, 247, 249, 0) 320px),
+    var(--color-canvas);
+}
+
+.glass-panel {
+  background: var(--color-surface);
+  box-shadow: var(--color-shadow);
+  backdrop-filter: blur(10px);
+}
+
+.code-block {
+  background: #f8faf9;
+  border: 1px solid var(--color-line);
+}
+
+.muted-copy {
+  color: var(--color-muted);
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes screen-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.reveal-up {
+  animation: rise-in 0.68s ease both;
+}
+
+.interactive-card {
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+
+.interactive-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--color-line-strong);
+  box-shadow: 0 14px 34px rgba(22, 32, 28, 0.09);
+}
+
+.screen-enter {
+  animation: screen-enter 0.28s ease both;
+}
+
+.result-focus-card {
+  position: relative;
+  transition:
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+
+.result-focus-card:hover {
+  border-color: var(--color-line-strong);
+  box-shadow: 0 18px 44px rgba(22, 32, 28, 0.1);
+  z-index: 1;
+}
+
+.decision-rail {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.decision-rail-card {
+  border: 1px solid var(--color-line);
+  background: var(--color-surface-strong);
+  border-radius: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.decision-rail-card.active {
+  border-color: var(--color-line-strong);
+  box-shadow: 0 12px 28px rgba(22, 32, 28, 0.08);
+}
+
+.visual-stat {
+  border: 1px solid var(--color-line);
+  background: var(--color-surface-strong);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.progress-track {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(91, 102, 98, 0.12);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--color-accent);
+  transition: width 0.35s ease;
+}
+
+.hero-orb {
+  display: none;
+}
+
+.hero-orb-primary {
+  top: -48px;
+  right: 14%;
+  width: 180px;
+  height: 180px;
+  background: rgba(12, 107, 103, 0.16);
+}
+
+.hero-orb-secondary {
+  right: -32px;
+  bottom: 14%;
+  width: 120px;
+  height: 120px;
+  background: rgba(165, 103, 33, 0.14);
+  animation-delay: 1.4s;
+}
+
+.hero-orb-tertiary {
+  left: 48%;
+  bottom: -28px;
+  width: 90px;
+  height: 90px;
+  background: rgba(28, 106, 68, 0.12);
+  animation-delay: 2.4s;
+}

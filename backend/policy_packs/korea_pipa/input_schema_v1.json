@@ -1,0 +1,469 @@
+{
+  "schema_id": "pipa_input_schema_v1",
+  "schema_name": "Korea PIPA Cross-Border Review Input Schema",
+  "version": "1.0.0",
+  "description": "Hybrid input schema for policy-based review under Korea's Personal Information Protection Act, covering lawful basis, minimization, notices, processor governance, cross-border transfers, security controls, sensitive/unique identifiers, and automated decisions.",
+  "groups": {
+    "collected_fields": {
+      "auto": {
+        "current_region": {
+          "type": "string",
+          "required": true,
+          "description": "Current region or hosting location where the dataset is stored or processed.",
+          "example": "ap-northeast-2",
+          "source": "cloud_config_or_architecture_inventory"
+        },
+        "encryption_at_rest": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": true,
+          "description": "Whether encryption at rest is enabled for the target dataset or resource.",
+          "example": true,
+          "source": "cloud_config"
+        },
+        "encryption_in_transit": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": true,
+          "description": "Whether encryption is applied in transit.",
+          "example": true,
+          "source": "network_or_security_config"
+        },
+        "access_control_in_place": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether access control, least privilege, and authentication controls are in place.",
+          "example": true,
+          "source": "iam_or_security_config"
+        }
+      },
+      "semi_auto": {
+        "data_type": {
+          "type": "string",
+          "required": false,
+          "description": "Detected or inferred dataset type.",
+          "example": "customer_profiles",
+          "source": "data_inventory_or_tagging"
+        },
+        "contains_sensitive_data": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether the dataset contains sensitive information under PIPA Article 23.",
+          "example": false,
+          "source": "data_discovery_or_steward_confirmation"
+        },
+        "has_unique_identifier": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether the dataset contains unique identifying information such as resident registration number, passport number, driver's license number, or alien registration number.",
+          "example": false,
+          "source": "data_discovery_or_steward_confirmation"
+        },
+        "uses_resident_registration_number": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether resident registration numbers are processed.",
+          "example": false,
+          "source": "data_discovery_or_steward_confirmation"
+        },
+        "uses_processor": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether a third-party processor, cloud vendor, SaaS provider, or entrusted party processes the personal information.",
+          "example": true,
+          "source": "architecture_inventory_or_vendor_list"
+        },
+        "is_automated_decision_only": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether a fully automated system, including AI, makes a decision using personal information.",
+          "example": false,
+          "source": "system_design_or_model_governance_inventory"
+        }
+      }
+    },
+    "manual_context_fields": {
+      "dataset_name": {
+        "type": "string",
+        "required": true,
+        "description": "Business-friendly name of the dataset being reviewed.",
+        "example": "kr_customer_profiles"
+      },
+      "target_region": {
+        "type": "string",
+        "required": true,
+        "description": "Target region or hosting location after transfer or processing.",
+        "example": "ap-northeast-2"
+      },
+      "processing_purpose_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the purpose of processing is clearly defined and documented.",
+        "example": true
+      },
+      "lawful_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": false,
+        "description": "PIPA Article 15 basis for collection and use.",
+        "enum": [
+          "consent",
+          "statutory_basis",
+          "public_task",
+          "contract",
+          "vital_interest",
+          "legitimate_interest",
+          "public_safety",
+          "unknown",
+          null
+        ],
+        "example": "contract"
+      },
+      "data_minimized": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether only the minimum necessary personal information is collected.",
+        "example": true
+      },
+      "retention_period_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether retention period and deletion timing are defined.",
+        "example": true
+      },
+      "privacy_notice_available": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether required notices or privacy notice information are available to data subjects.",
+        "example": true
+      },
+      "privacy_policy_available": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a privacy policy containing required PIPA Article 30 items is published or available.",
+        "example": true
+      },
+      "consent_notice_clear": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "When consent is used, whether consent items are separated and clearly presented.",
+        "example": true
+      },
+      "consent_withdrawal_process_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether data subjects can withdraw consent or request processing suspension.",
+        "example": true
+      },
+      "third_party_sharing": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether personal information is provided to a third party.",
+        "example": false
+      },
+      "third_party_provision_consent_or_basis": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a valid consent or statutory basis exists for third-party provision.",
+        "example": true
+      },
+      "sensitive_data_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": false,
+        "description": "Basis for processing sensitive information, if any.",
+        "enum": [
+          "explicit_consent",
+          "statutory_basis",
+          "none",
+          "unknown",
+          null
+        ],
+        "example": null
+      },
+      "unique_identifier_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": false,
+        "description": "Basis for processing unique identifying information, if any.",
+        "enum": [
+          "separate_consent",
+          "statutory_basis",
+          "none",
+          "unknown",
+          null
+        ],
+        "example": null
+      },
+      "resident_registration_statutory_basis": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a law or decree specifically permits or requires resident registration number processing.",
+        "example": false
+      },
+      "dpa_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a written entrustment/processor agreement is in place.",
+        "example": true
+      },
+      "processor_public_disclosure": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether entrusted work and processor information are made easily available to data subjects.",
+        "example": true
+      },
+      "processor_supervision_done": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether processor education, supervision, and processing status checks are performed.",
+        "example": true
+      },
+      "subprocessor_controls_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether onward entrustment or subprocessor use is controlled by prior authorization and contractual terms.",
+        "example": true
+      },
+      "separate_consent_for_transfer": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether separate consent for overseas transfer has been obtained.",
+        "example": false
+      },
+      "treaty_or_statutory_transfer_basis": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a law, treaty, or international agreement specifically permits the overseas transfer.",
+        "example": false
+      },
+      "contract_necessity_disclosed_or_notified": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether transfer by processing entrustment/storage is necessary for contract formation/performance and required information is disclosed in the privacy policy or notified to the data subject.",
+        "example": false
+      },
+      "pipa_certified_recipient": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the recipient has a PIPC-designated privacy certification and required measures are taken.",
+        "example": false
+      },
+      "pipa_equivalence_recognition_exists": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether PIPC recognizes the destination country or international organization as substantially equivalent in protection level.",
+        "example": false
+      },
+      "cross_border_notice_provided": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether overseas transfer notice items are provided, including transferred items, country, timing/method, recipient, purpose/retention, and refusal method/effect.",
+        "example": true
+      },
+      "transfer_protection_measures_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether protective measures for overseas transfer are ready.",
+        "example": true
+      },
+      "onward_transfer_controls": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether controls exist for onward transfer to a third country by the overseas recipient.",
+        "example": true
+      },
+      "data_subject_rights_process_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether processes exist for access, correction, deletion, suspension, withdrawal, and other data subject rights.",
+        "example": true
+      },
+      "automated_decision_significant_effect": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the automated decision significantly affects the data subject's rights or obligations.",
+        "example": false
+      },
+      "automated_decision_rights_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether refusal, explanation request, human intervention, reprocessing, and explanation procedures are ready for automated decisions.",
+        "example": true
+      },
+      "provides_explanation": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether explanations for automated decisions are provided or available on request.",
+        "example": true
+      },
+      "human_review_available": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether human intervention or reprocessing is available when a data subject exercises rights regarding automated decisions.",
+        "example": true
+      },
+      "privacy_officer_assigned": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a privacy officer or responsible person is assigned.",
+        "example": true
+      },
+      "breach_response_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether incident and breach response procedures are ready.",
+        "example": true
+      }
+    },
+    "derived_fields": {
+      "target_country": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Country inferred from target_region when possible."
+      },
+      "target_country_known": {
+        "type": "boolean",
+        "description": "Whether target country could be inferred or supplied."
+      },
+      "transfer_outside_korea": {
+        "type": "boolean",
+        "description": "Whether the target country is outside Korea."
+      },
+      "is_third_country_transfer": {
+        "type": "boolean",
+        "description": "Alias for transfer_outside_korea, kept for UI/evaluation compatibility."
+      },
+      "baseline_security_controls_ready": {
+        "type": "boolean",
+        "description": "Whether encryption at rest, encryption in transit, and access control are all ready."
+      },
+      "pipa_transfer_basis_available": {
+        "type": "boolean",
+        "description": "Whether at least one PIPA Article 28-8 overseas transfer route appears available."
+      }
+    }
+  },
+  "collection_strategy": {
+    "auto": "Use cloud and security configuration where possible.",
+    "semi_auto": "Use data inventory, tagging, and architecture metadata where available.",
+    "manual": "Use business, legal, privacy, and vendor documentation to confirm legal bases and notices."
+  }
+}

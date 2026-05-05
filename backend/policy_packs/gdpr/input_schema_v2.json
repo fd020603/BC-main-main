@@ -1,0 +1,464 @@
+{
+  "schema_id": "gdpr_input_schema_v2",
+  "schema_name": "GDPR Cross-Border Review Input Schema",
+  "version": "3.1.0",
+  "description": "Hybrid input schema for policy-based review of GDPR cross-border transfers. Technical metadata, structured business answers, and derived transfer facts are merged before qualitative evaluation.",
+  "groups": {
+    "collected_fields": {
+      "auto": {
+        "current_region": {
+          "type": "string",
+          "required": true,
+          "description": "Current AWS region where the dataset is stored or processed.",
+          "example": "eu-central-1",
+          "source": "aws_config"
+        },
+        "encryption_at_rest": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": true,
+          "description": "Whether encryption at rest is enabled for the target dataset or resource.",
+          "example": true,
+          "source": "aws_config"
+        }
+      },
+      "semi_auto": {
+        "data_type": {
+          "type": "string",
+          "required": false,
+          "description": "Detected or inferred dataset type.",
+          "example": "customer_records",
+          "source": "macie_or_tag_inference"
+        },
+        "contains_sensitive_data": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether the dataset appears to contain special category or similarly sensitive personal data.",
+          "example": true,
+          "source": "amazon_macie"
+        },
+        "uses_processor": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether an external processor or hosted service provider is involved in the transfer path.",
+          "example": true,
+          "source": "service_mapping_or_manual_confirmation"
+        },
+        "encryption_in_transit": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether transport encryption is enabled.",
+          "example": true,
+          "source": "tls_endpoint_or_architecture_inference"
+        },
+        "access_control_in_place": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether baseline access control appears to be configured.",
+          "example": true,
+          "source": "iam_policy_bucket_policy_security_group_review"
+        }
+      }
+    },
+    "manual_context_fields": {
+      "dataset_name": {
+        "type": "string",
+        "required": true,
+        "description": "Human-readable name of the dataset being evaluated.",
+        "example": "customer-backup-bucket"
+      },
+      "scenario_notes": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": false,
+        "description": "Optional free-form notes for the reviewer or demo presenter.",
+        "example": "US analytics processor receives EU customer event data."
+      },
+      "data_subject_region": {
+        "type": "string",
+        "required": true,
+        "enum": [
+          "EU",
+          "EEA",
+          "UK",
+          "OTHER"
+        ],
+        "description": "Region of the data subjects relevant to the assessment.",
+        "example": "EU"
+      },
+      "processing_purpose_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether the purpose of processing is clearly defined and documented.",
+        "example": true
+      },
+      "data_minimized": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether only necessary personal data is processed for the stated purpose.",
+        "example": true
+      },
+      "retention_period_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether retention or deletion period is documented.",
+        "example": true
+      },
+      "lawful_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": true,
+        "enum": [
+          "consent",
+          "contract",
+          "legal_obligation",
+          "vital_interest",
+          "public_task",
+          "legitimate_interest",
+          null
+        ],
+        "description": "Article 6 lawful basis for processing.",
+        "example": "contract"
+      },
+      "special_category_condition_met": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether an Article 9 condition has been confirmed for special category data.",
+        "example": true
+      },
+      "target_region": {
+        "type": "string",
+        "required": true,
+        "description": "AWS region selected as target for storage or transfer.",
+        "example": "us-east-1"
+      },
+      "controller_processor_roles_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether controller and processor responsibilities are clearly assigned.",
+        "example": true
+      },
+      "dpa_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a Data Processing Agreement exists with the processor.",
+        "example": true
+      },
+      "processor_sufficient_guarantees": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the processor provides sufficient guarantees under Article 28.",
+        "example": true
+      },
+      "subprocessor_controls_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether subprocessor approval, onward transfer, and re-delegation controls are documented.",
+        "example": true
+      },
+      "scc_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether Standard Contractual Clauses are in place.",
+        "example": true
+      },
+      "bcr_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether Binding Corporate Rules are in place.",
+        "example": false
+      },
+      "other_safeguards_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether another Article 46 safeguard is documented.",
+        "example": false
+      },
+      "transfer_impact_assessment_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a transfer impact assessment or equivalent third-country review was completed.",
+        "example": true
+      },
+      "supplemental_measures_documented": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether supplemental technical, contractual, or organizational measures are documented where relevant.",
+        "example": true
+      },
+      "dpia_required": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the scenario indicates a Data Protection Impact Assessment requirement.",
+        "example": true
+      },
+      "dpia_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a required DPIA was completed and retained.",
+        "example": true
+      },
+      "dpo_required": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the controller is likely required to appoint a Data Protection Officer for this scenario.",
+        "example": true
+      },
+      "dpo_assigned": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the required Data Protection Officer or equivalent responsible person has been assigned.",
+        "example": true
+      },
+      "incident_response_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a documented incident response process exists.",
+        "example": true
+      },
+      "breach_notification_ready_72h": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether 72-hour supervisory notification readiness is documented where a reportable breach could occur.",
+        "example": true
+      },
+      "derogation_used": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether the transfer relies on an Article 49 derogation.",
+        "example": false
+      },
+      "derogation_type": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": false,
+        "description": "Specific derogation type if Article 49 is used.",
+        "example": null
+      },
+      "privacy_notice_updated": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether privacy notice wording has been updated for the current processing or transfer context.",
+        "example": true
+      },
+      "transfer_disclosed_to_subject": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the relevant transfer context was disclosed to the data subject.",
+        "example": true
+      },
+      "records_of_processing_exists": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether records of processing activities exist.",
+        "example": true
+      },
+      "transfer_documented_in_ropa": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the transfer path and safeguards are documented in the record of processing activities.",
+        "example": true
+      },
+      "data_subject_rights_process_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether access, correction, deletion, portability, and objection handling workflows are documented.",
+        "example": true
+      },
+      "privacy_by_design_review_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether privacy by design/default review was completed for the processing or transfer design.",
+        "example": true
+      }
+    },
+    "derived_fields": {
+      "target_country": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Country mapped from target_region."
+      },
+      "target_country_known": {
+        "type": "boolean",
+        "description": "Whether target_region could be mapped to a country code."
+      },
+      "adequacy_decision_exists": {
+        "type": "boolean",
+        "description": "Whether the target country currently has an EU adequacy decision or is within the EU/EEA area."
+      },
+      "is_third_country_transfer": {
+        "type": "boolean",
+        "description": "Calculated from data_subject_region and target_country."
+      },
+      "transfer_safeguards_available": {
+        "type": "boolean",
+        "description": "Whether SCCs, BCRs, or another Article 46 safeguard is present."
+      },
+      "baseline_security_controls_ready": {
+        "type": "boolean",
+        "description": "Whether encryption at rest, encryption in transit, and access control are all confirmed."
+      }
+    }
+  },
+  "collection_strategy": {
+    "auto_sources": {
+      "aws_config": [
+        "current_region",
+        "encryption_at_rest"
+      ],
+      "region_mapping": [
+        "target_country"
+      ],
+      "adequacy_lookup_table": [
+        "adequacy_decision_exists"
+      ]
+    },
+    "semi_auto_sources": {
+      "amazon_macie": [
+        "data_type",
+        "contains_sensitive_data"
+      ],
+      "architecture_inference": [
+        "uses_processor",
+        "encryption_in_transit",
+        "access_control_in_place"
+      ]
+    },
+    "manual_sources": {
+      "policy_context_yaml_or_json": [
+        "dataset_name",
+        "scenario_notes",
+        "data_subject_region",
+        "processing_purpose_defined",
+        "data_minimized",
+        "retention_period_defined",
+        "lawful_basis",
+        "special_category_condition_met",
+        "target_region",
+        "controller_processor_roles_defined",
+        "dpa_in_place",
+        "processor_sufficient_guarantees",
+        "subprocessor_controls_in_place",
+        "scc_in_place",
+        "bcr_in_place",
+        "other_safeguards_in_place",
+        "transfer_impact_assessment_completed",
+        "supplemental_measures_documented",
+        "dpia_required",
+        "dpia_completed",
+        "dpo_required",
+        "dpo_assigned",
+        "incident_response_in_place",
+        "breach_notification_ready_72h",
+        "derogation_used",
+        "derogation_type",
+        "privacy_notice_updated",
+        "transfer_disclosed_to_subject",
+        "records_of_processing_exists",
+        "transfer_documented_in_ropa",
+        "data_subject_rights_process_ready",
+        "privacy_by_design_review_completed"
+      ]
+    }
+  }
+}

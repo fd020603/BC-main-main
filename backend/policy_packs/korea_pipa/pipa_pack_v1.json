@@ -1,0 +1,1201 @@
+{
+  "pack_id": "korea_pipa",
+  "pack_name": "Korea PIPA Cross-Border Policy Pack",
+  "jurisdiction": "KR",
+  "version": "1.0.0",
+  "description": "대한민국 개인정보 보호법 기반 정책팩입니다. 수집·이용 적법근거, 제3자 제공, 업무위탁, 안전조치, 국외이전, 민감정보·고유식별정보, 자동화된 결정 대응을 정성 판정합니다.",
+  "supported_decisions": [
+    "deny",
+    "manual_review",
+    "condition_allow",
+    "allow"
+  ],
+  "decision_model": {
+    "precedence": [
+      "deny",
+      "manual_review",
+      "condition_allow",
+      "allow"
+    ],
+    "method": "strictest_triggered_decision_wins",
+    "explanation": "여러 규칙이 동시에 충족되면 가장 엄격한 정성 판정이 최종 결과가 되며, 모든 트리거된 규칙과 조치가 결과에 남습니다."
+  },
+  "source_references": [
+    "PIPA Art. 3: 개인정보 보호 원칙: 목적 명확화, 최소수집, 안전관리, 권리보장 등",
+    "PIPA Art. 15: 개인정보의 수집ㆍ이용",
+    "PIPA Art. 16: 개인정보의 수집 제한",
+    "PIPA Art. 17: 개인정보의 제공",
+    "PIPA Art. 21: 개인정보의 파기",
+    "PIPA Art. 22: 동의를 받는 방법",
+    "PIPA Art. 23: 민감정보의 처리 제한",
+    "PIPA Art. 24: 고유식별정보의 처리 제한",
+    "PIPA Art. 24-2: 주민등록번호 처리의 제한",
+    "PIPA Art. 26: 업무위탁에 따른 개인정보의 처리 제한",
+    "PIPA Art. 28-8: 개인정보의 국외 이전",
+    "PIPA Art. 28-9: 개인정보의 국외 이전 중지 명령",
+    "PIPA Art. 28-11: 국외 이전받은 자의 제3국 이전에 관한 준용규정",
+    "PIPA Art. 29: 안전조치의무",
+    "PIPA Art. 30: 개인정보 처리방침의 수립 및 공개",
+    "PIPA Art. 31: 개인정보 보호책임자의 지정 등",
+    "PIPA Art. 37: 개인정보 처리정지 등",
+    "PIPA Art. 37-2: 자동화된 결정에 대한 정보주체의 권리 등"
+  ],
+  "assumptions": [
+    "이 정책팩은 대한민국 개인정보 보호법의 주요 판단요소를 자동/반자동 점검하기 위한 의사결정 보조용입니다.",
+    "대상 국가 판정은 target_region을 AWS_REGION_TO_COUNTRY에 매핑해 추론하며, 알 수 없는 리전은 수동 확인이 필요합니다.",
+    "국외이전 여부는 target_country가 KR이 아닌 경우로 단순화합니다.",
+    "적정성 인정, 인증, 조약·법률상 근거 등은 실제 보호위원회 고시와 계약·법무 검토로 최종 확인해야 합니다.",
+    "시행령·고시·가이드라인의 세부 요건은 별도 정책팩 또는 수동 검토로 보완할 수 있습니다."
+  ],
+  "limitations": [
+    "이 팩은 법률 자문이 아니며, 실제 서비스 출시나 이전 집행 전에는 법무·개인정보보호 담당자 검토가 필요합니다.",
+    "민감정보, 주민등록번호, 대규모 처리, 공공기관 처리, 아동 개인정보, 가명정보 결합 등 특수 시나리오는 추가 규칙이 필요할 수 있습니다.",
+    "제28조의8 제1항 각 호의 세부 요건은 입력값이 충분히 수집된 경우에만 자동 판정됩니다.",
+    "국외이전 중지 명령 위험, 과징금, 침해 통지 등 사후 제재 판단은 별도 사고대응·제재평가 팩의 대상입니다."
+  ],
+  "disclaimer": "이 결과는 개인정보 보호법 준수 여부를 사전에 점검하기 위한 참고용 자동 평가이며, 법적 결론이나 공식 자문을 대체하지 않습니다.",
+  "review_guidance": [
+    "국외이전 시 제28조의8 제1항의 이전 경로, 제2항 고지 항목, 제4항 보호조치, 제28조의11 재이전 통제를 함께 확인하세요.",
+    "업무위탁 시 위탁문서, 수탁자 공개, 교육·감독, 재위탁 동의 여부를 계약서와 운영 증빙으로 확인하세요.",
+    "민감정보·고유식별정보·주민등록번호가 포함되면 별도 동의 또는 법령상 근거와 암호화 등 보호조치를 우선 확인하세요.",
+    "자동화된 결정이 권리 또는 의무에 중대한 영향을 미치면 거부권, 설명 요구권, 인적 개입 또는 재처리 절차를 확인하세요.",
+    "자동 결과가 allow여도 개인정보 처리방침, 보관기간, 파기 절차, 정보주체 권리 대응 채널은 실제 화면·문서와 대조하세요."
+  ],
+  "sample_scenarios": [
+    {
+      "scenario_id": "kr-local-processing-secure",
+      "name": "한국 리전 내 일반 고객정보 처리",
+      "expected_decision": "allow"
+    },
+    {
+      "scenario_id": "kr-to-us-no-transfer-basis",
+      "name": "미국 리전 이전이나 국외이전 경로 없음",
+      "expected_decision": "deny"
+    },
+    {
+      "scenario_id": "kr-to-jp-contract-notified",
+      "name": "계약 이행을 위한 일본 보관·위탁 및 처리방침 공개",
+      "expected_decision": "condition_allow"
+    },
+    {
+      "scenario_id": "kr-sensitive-data-no-basis",
+      "name": "민감정보 처리 근거 미확인",
+      "expected_decision": "deny"
+    },
+    {
+      "scenario_id": "kr-ai-decision-no-rights-process",
+      "name": "중대한 자동화 결정이나 설명·거부 절차 없음",
+      "expected_decision": "manual_review"
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "common-target-country-unknown-review",
+      "article": "PIPA Art. 28-8",
+      "title": "대상 국가 식별 불가",
+      "category": "cross_border_transfer",
+      "priority": 95,
+      "decision": "manual_review",
+      "when": {
+        "field": "target_country_known",
+        "eq": false
+      },
+      "required_evidence": [
+        "대상 리전과 실제 저장 또는 접근 국가 매핑 자료"
+      ],
+      "required_actions": [
+        "대상 리전이 어느 국가에 해당하는지 확인하고 국외이전 여부와 적용 경로를 다시 검토하세요."
+      ],
+      "message": "대상 국가를 식별할 수 없어 PIPA 국외이전 여부와 허용 경로를 확정할 수 없습니다.",
+      "references": [
+        "PIPA Art. 28-8"
+      ],
+      "reviewer_notes": [
+        "알 수 없는 클라우드 리전이나 사용자 정의 리전은 자동 허용하지 말고 수동 검토로 처리하세요."
+      ]
+    },
+    {
+      "rule_id": "pipa-art-15-lawful-basis-missing",
+      "article": 15,
+      "title": "수집ㆍ이용 적법근거 미확인",
+      "category": "lawfulness",
+      "priority": 100,
+      "decision": "deny",
+      "when": {
+        "any": [
+          {
+            "field": "lawful_basis",
+            "eq": null
+          },
+          {
+            "field": "lawful_basis",
+            "eq": ""
+          },
+          {
+            "field": "lawful_basis",
+            "eq": "unknown"
+          }
+        ]
+      },
+      "required_evidence": [
+        "제15조 제1항에 따른 수집ㆍ이용 근거 문서"
+      ],
+      "required_actions": [
+        "동의, 법령상 의무, 계약 이행, 정당한 이익 등 처리 목적에 맞는 적법근거를 확정하고 기록하세요."
+      ],
+      "message": "개인정보 수집ㆍ이용의 적법근거가 확인되지 않아 현재 상태로는 처리를 승인하기 어렵습니다.",
+      "references": [
+        "개인정보의 수집ㆍ이용"
+      ],
+      "reviewer_notes": [
+        "처리 목적과 실제 수집 항목이 확정되어 있는지 함께 확인하세요.",
+        "Original article label: PIPA Art. 15"
+      ],
+      "explanation_template": "처리 자체의 적법근거가 없으면 국외이전 경로가 있더라도 전체 시나리오를 승인하기 어렵습니다.",
+      "risk_score_delta": 35,
+      "compliance_score_delta": -35
+    },
+    {
+      "rule_id": "pipa-art-3-15-purpose-undefined",
+      "article": 3,
+      "title": "처리 목적 미정의",
+      "category": "lawfulness",
+      "priority": 98,
+      "decision": "manual_review",
+      "when": {
+        "field": "processing_purpose_defined",
+        "eq": false
+      },
+      "required_evidence": [
+        "처리 목적 정의 문서",
+        "서비스 또는 업무 목적 설명"
+      ],
+      "required_actions": [
+        "개인정보 처리 목적을 명확히 정의하고 해당 목적 범위 내에서만 이용하도록 정리하세요."
+      ],
+      "message": "개인정보 처리 목적이 명확히 정의되지 않았습니다.",
+      "references": [
+        "개인정보 보호 원칙",
+        "개인정보의 수집ㆍ이용"
+      ],
+      "reviewer_notes": [
+        "목적 외 이용 또는 제공 가능성이 있는지 확인하세요.",
+        "Original article label: PIPA Art. 3 / Art. 15"
+      ],
+      "risk_score_delta": 22,
+      "compliance_score_delta": -10
+    },
+    {
+      "rule_id": "pipa-art-16-data-minimization-gap",
+      "article": 16,
+      "title": "최소수집 원칙 미충족",
+      "category": "data_minimization",
+      "priority": 85,
+      "decision": "condition_allow",
+      "when": {
+        "field": "data_minimized",
+        "eq": false
+      },
+      "required_evidence": [
+        "수집 항목과 목적 간 필요성 검토표"
+      ],
+      "required_actions": [
+        "처리 목적에 필요한 최소 항목만 남기고 불필요한 항목은 제거하거나 선택 동의로 분리하세요."
+      ],
+      "message": "개인정보 최소수집 여부가 확인되지 않았거나 과다수집 가능성이 있습니다.",
+      "references": [
+        "개인정보의 수집 제한"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 16"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-21-retention-missing",
+      "article": 21,
+      "title": "보유기간ㆍ파기 기준 미정의",
+      "category": "retention",
+      "priority": 82,
+      "decision": "condition_allow",
+      "when": {
+        "field": "retention_period_defined",
+        "eq": false
+      },
+      "required_evidence": [
+        "보유기간표",
+        "파기 절차 문서",
+        "개인정보 처리방침"
+      ],
+      "required_actions": [
+        "보유기간, 목적 달성 후 파기 시점, 예외 보존 근거를 문서화하세요."
+      ],
+      "message": "보유기간 또는 파기 기준이 명확하지 않아 보완 후 진행하는 것이 적절합니다.",
+      "references": [
+        "개인정보의 파기",
+        "개인정보 처리방침의 수립 및 공개"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 21 / Art. 30"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-30-privacy-policy-missing",
+      "article": 30,
+      "title": "개인정보 처리방침 미공개 또는 미확인",
+      "category": "transparency",
+      "priority": 80,
+      "decision": "condition_allow",
+      "when": {
+        "field": "privacy_policy_available",
+        "eq": false
+      },
+      "required_evidence": [
+        "개인정보 처리방침 URL 또는 문서",
+        "처리방침 개정 이력"
+      ],
+      "required_actions": [
+        "처리 목적, 보유기간, 제3자 제공, 위탁, 파기, 권리 행사방법, 보호책임자 등을 포함한 처리방침을 공개하세요."
+      ],
+      "message": "개인정보 처리방침이 확인되지 않았습니다.",
+      "references": [
+        "개인정보 처리방침의 수립 및 공개"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 30"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-22-consent-notice-unclear",
+      "article": 22,
+      "title": "동의 항목 구분ㆍ명확성 부족",
+      "category": "consent",
+      "priority": 78,
+      "decision": "condition_allow",
+      "when": {
+        "all": [
+          {
+            "field": "lawful_basis",
+            "eq": "consent"
+          },
+          {
+            "field": "consent_notice_clear",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "동의 화면 캡처",
+        "동의 문구",
+        "선택/필수 동의 구분 자료"
+      ],
+      "required_actions": [
+        "동의 사항을 처리 목적별로 구분하고 정보주체가 명확히 인지할 수 있도록 고지 문구를 보완하세요."
+      ],
+      "message": "동의 기반 처리이나 동의 항목 구분 또는 명확성이 부족합니다.",
+      "references": [
+        "동의를 받는 방법"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 22"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-17-third-party-basis-missing",
+      "article": 17,
+      "title": "제3자 제공 근거 미확인",
+      "category": "third_party_provision",
+      "priority": 96,
+      "decision": "deny",
+      "when": {
+        "all": [
+          {
+            "field": "third_party_sharing",
+            "eq": true
+          },
+          {
+            "field": "third_party_provision_consent_or_basis",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "제3자 제공 동의서 또는 법령상 제공 근거",
+        "제공받는 자ㆍ목적ㆍ항목ㆍ보유기간 고지 자료"
+      ],
+      "required_actions": [
+        "제3자 제공 동의 또는 법령상 제공 근거를 확보하고 제공받는 자, 목적, 항목, 보유기간, 거부권을 고지하세요."
+      ],
+      "message": "제3자 제공이 있으나 동의 또는 법령상 근거가 확인되지 않았습니다.",
+      "references": [
+        "개인정보의 제공"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 17"
+      ],
+      "risk_score_delta": 35,
+      "compliance_score_delta": -35
+    },
+    {
+      "rule_id": "pipa-art-23-sensitive-basis-missing",
+      "article": 23,
+      "title": "민감정보 처리 근거 미확인",
+      "category": "sensitive_data",
+      "priority": 99,
+      "decision": "deny",
+      "when": {
+        "all": [
+          {
+            "field": "contains_sensitive_data",
+            "eq": true
+          },
+          {
+            "any": [
+              {
+                "field": "sensitive_data_basis",
+                "eq": null
+              },
+              {
+                "field": "sensitive_data_basis",
+                "eq": "none"
+              },
+              {
+                "field": "sensitive_data_basis",
+                "eq": "unknown"
+              }
+            ]
+          }
+        ]
+      },
+      "required_evidence": [
+        "민감정보 별도 동의서 또는 법령상 처리 근거"
+      ],
+      "required_actions": [
+        "민감정보 처리에 대한 별도 동의 또는 법령상 요구ㆍ허용 근거를 확보하세요."
+      ],
+      "message": "민감정보가 포함되어 있으나 처리 근거가 확인되지 않았습니다.",
+      "references": [
+        "민감정보의 처리 제한"
+      ],
+      "reviewer_notes": [
+        "민감정보 범위와 공개 가능성, 비공개 선택 방법 고지 필요성도 확인하세요.",
+        "Original article label: PIPA Art. 23"
+      ],
+      "risk_score_delta": 35,
+      "compliance_score_delta": -35
+    },
+    {
+      "rule_id": "pipa-art-24-unique-id-basis-missing",
+      "article": 24,
+      "title": "고유식별정보 처리 근거 미확인",
+      "category": "unique_identifier",
+      "priority": 97,
+      "decision": "deny",
+      "when": {
+        "all": [
+          {
+            "field": "has_unique_identifier",
+            "eq": true
+          },
+          {
+            "any": [
+              {
+                "field": "unique_identifier_basis",
+                "eq": null
+              },
+              {
+                "field": "unique_identifier_basis",
+                "eq": "none"
+              },
+              {
+                "field": "unique_identifier_basis",
+                "eq": "unknown"
+              }
+            ]
+          }
+        ]
+      },
+      "required_evidence": [
+        "고유식별정보 별도 동의서 또는 법령상 처리 근거",
+        "암호화 적용 증빙"
+      ],
+      "required_actions": [
+        "고유식별정보 처리의 별도 동의 또는 법령상 근거를 확보하고 암호화 등 안전조치를 적용하세요."
+      ],
+      "message": "고유식별정보가 포함되어 있으나 처리 근거가 확인되지 않았습니다.",
+      "references": [
+        "고유식별정보의 처리 제한"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 24"
+      ],
+      "risk_score_delta": 35,
+      "compliance_score_delta": -35
+    },
+    {
+      "rule_id": "pipa-art-24-2-rrn-without-statutory-basis",
+      "article": 24,
+      "title": "주민등록번호 처리 법령 근거 없음",
+      "category": "unique_identifier",
+      "priority": 100,
+      "decision": "deny",
+      "when": {
+        "all": [
+          {
+            "field": "uses_resident_registration_number",
+            "eq": true
+          },
+          {
+            "field": "resident_registration_statutory_basis",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "주민등록번호 처리를 요구하거나 허용하는 법률ㆍ대통령령 등 근거"
+      ],
+      "required_actions": [
+        "주민등록번호 처리가 필요한 법령 근거를 확인하거나 대체 식별수단으로 전환하세요."
+      ],
+      "message": "주민등록번호 처리는 일반 동의만으로는 부족하며 구체적인 법령 근거가 필요합니다.",
+      "references": [
+        "주민등록번호 처리의 제한"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 24-2"
+      ],
+      "risk_score_delta": 35,
+      "compliance_score_delta": -35
+    },
+    {
+      "rule_id": "pipa-art-29-baseline-security-gap",
+      "article": 29,
+      "title": "기본 안전조치 미흡",
+      "category": "security",
+      "priority": 90,
+      "decision": "condition_allow",
+      "when": {
+        "field": "baseline_security_controls_ready",
+        "eq": false
+      },
+      "required_evidence": [
+        "암호화 설정 내역",
+        "접근통제 정책",
+        "접속기록 보관 및 점검 자료"
+      ],
+      "required_actions": [
+        "저장ㆍ전송 암호화, 접근통제, 접속기록 보관 등 기본 안전성 확보조치를 보완하세요."
+      ],
+      "message": "기술적ㆍ관리적ㆍ물리적 안전조치 중 일부가 확인되지 않았습니다.",
+      "references": [
+        "안전조치의무"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 29"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-26-processor-agreement-missing",
+      "article": 26,
+      "title": "업무위탁 문서 미체결",
+      "category": "processor",
+      "priority": 95,
+      "decision": "deny",
+      "when": {
+        "all": [
+          {
+            "field": "uses_processor",
+            "eq": true
+          },
+          {
+            "field": "dpa_in_place",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "위탁계약서 또는 위탁문서",
+        "위탁업무 범위 및 수탁자 책임 조항"
+      ],
+      "required_actions": [
+        "위탁업무 수행 목적 외 처리 금지, 보호조치, 안전관리 사항이 포함된 문서를 체결하세요."
+      ],
+      "message": "개인정보 처리 업무위탁이 있으나 제26조상 문서 체결이 확인되지 않았습니다.",
+      "references": [
+        "업무위탁에 따른 개인정보의 처리 제한"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 26"
+      ],
+      "risk_score_delta": 35,
+      "compliance_score_delta": -35
+    },
+    {
+      "rule_id": "pipa-art-26-processor-disclosure-missing",
+      "article": 26,
+      "title": "수탁자 공개 미흡",
+      "category": "processor",
+      "priority": 76,
+      "decision": "condition_allow",
+      "when": {
+        "all": [
+          {
+            "field": "uses_processor",
+            "eq": true
+          },
+          {
+            "field": "processor_public_disclosure",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "개인정보 처리방침의 위탁 현황",
+        "수탁자 및 위탁업무 공개 화면"
+      ],
+      "required_actions": [
+        "위탁업무 내용과 수탁자를 정보주체가 쉽게 확인할 수 있도록 공개하세요."
+      ],
+      "message": "수탁자와 위탁업무 공개 여부가 확인되지 않았습니다.",
+      "references": [
+        "업무위탁에 따른 개인정보의 처리 제한"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 26"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-26-processor-supervision-gap",
+      "article": 26,
+      "title": "수탁자 교육ㆍ감독 미흡",
+      "category": "processor",
+      "priority": 74,
+      "decision": "manual_review",
+      "when": {
+        "all": [
+          {
+            "field": "uses_processor",
+            "eq": true
+          },
+          {
+            "field": "processor_supervision_done",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "수탁자 교육 기록",
+        "처리 현황 점검 기록",
+        "보안성 검토 또는 감사 결과"
+      ],
+      "required_actions": [
+        "수탁자 교육, 처리현황 점검, 보안성 검토 등 감독 활동을 수행하고 기록하세요."
+      ],
+      "message": "수탁자 교육ㆍ감독 증빙이 부족하여 수동 검토가 필요합니다.",
+      "references": [
+        "업무위탁에 따른 개인정보의 처리 제한"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 26"
+      ],
+      "risk_score_delta": 22,
+      "compliance_score_delta": -10
+    },
+    {
+      "rule_id": "pipa-art-26-subprocessor-controls-gap",
+      "article": 26,
+      "title": "재위탁 통제 미흡",
+      "category": "processor",
+      "priority": 72,
+      "decision": "condition_allow",
+      "when": {
+        "all": [
+          {
+            "field": "uses_processor",
+            "eq": true
+          },
+          {
+            "field": "subprocessor_controls_in_place",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "재위탁 승인 내역",
+        "하위 수탁자 목록",
+        "재위탁 제한 조항"
+      ],
+      "required_actions": [
+        "수탁자의 재위탁은 위탁자 동의와 계약상 통제 하에 이루어지도록 정리하세요."
+      ],
+      "message": "재위탁 또는 하위처리자 통제가 확인되지 않았습니다.",
+      "references": [
+        "업무위탁에 따른 개인정보의 처리 제한"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 26"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-28-8-transfer-basis-missing",
+      "article": 28,
+      "title": "국외이전 허용 경로 미확인",
+      "category": "transfer",
+      "priority": 98,
+      "decision": "deny",
+      "when": {
+        "all": [
+          {
+            "field": "transfer_outside_korea",
+            "eq": true
+          },
+          {
+            "field": "pipa_transfer_basis_available",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "국외이전 별도 동의",
+        "법률ㆍ조약ㆍ국제협정 근거",
+        "계약 이행상 위탁ㆍ보관 필요 및 공개/통지 증빙",
+        "보호위원회 인정 인증",
+        "동등 보호수준 인정 근거"
+      ],
+      "required_actions": [
+        "제28조의8 제1항 각 호 중 하나의 국외이전 경로를 확정하고 증빙을 보관하세요."
+      ],
+      "message": "국외 이전이 있으나 제28조의8상 허용 경로가 확인되지 않았습니다.",
+      "references": [
+        "개인정보의 국외 이전"
+      ],
+      "reviewer_notes": [
+        "국외이전은 제공뿐 아니라 조회, 처리위탁, 보관도 포함되는지 확인하세요.",
+        "Original article label: PIPA Art. 28-8"
+      ],
+      "risk_score_delta": 35,
+      "compliance_score_delta": -35
+    },
+    {
+      "rule_id": "pipa-art-28-8-transfer-notice-gap",
+      "article": 28,
+      "title": "국외이전 고지 항목 미흡",
+      "category": "transfer",
+      "priority": 88,
+      "decision": "condition_allow",
+      "when": {
+        "all": [
+          {
+            "field": "transfer_outside_korea",
+            "eq": true
+          },
+          {
+            "field": "separate_consent_for_transfer",
+            "eq": true
+          },
+          {
+            "field": "cross_border_notice_provided",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "국외이전 동의서",
+        "이전 항목ㆍ국가ㆍ시기ㆍ방법ㆍ수령자ㆍ목적ㆍ보유기간ㆍ거부 방법/효과 고지 자료"
+      ],
+      "required_actions": [
+        "국외이전 별도 동의 전에 제28조의8 제2항의 고지 항목을 모두 제공하세요."
+      ],
+      "message": "국외이전 별도 동의를 사용하지만 필수 고지 항목 제공이 확인되지 않았습니다.",
+      "references": [
+        "개인정보의 국외 이전"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 28-8"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-28-8-transfer-protection-measures-gap",
+      "article": 28,
+      "title": "국외이전 보호조치 미흡",
+      "category": "transfer",
+      "priority": 86,
+      "decision": "condition_allow",
+      "when": {
+        "all": [
+          {
+            "field": "transfer_outside_korea",
+            "eq": true
+          },
+          {
+            "field": "pipa_transfer_basis_available",
+            "eq": true
+          },
+          {
+            "field": "transfer_protection_measures_ready",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "국외 수령자 보호조치 약정",
+        "정보주체 권리보장 절차",
+        "보안조치 및 연락창구 문서"
+      ],
+      "required_actions": [
+        "국외 이전과 관련한 보호조치와 정보주체 권리보장 절차를 계약ㆍ운영 문서에 반영하세요."
+      ],
+      "message": "국외이전 경로는 있으나 보호조치 준비 여부가 부족합니다.",
+      "references": [
+        "개인정보의 국외 이전"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 28-8"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-28-11-onward-transfer-controls-gap",
+      "article": 28,
+      "title": "재이전 통제 미흡",
+      "category": "transfer",
+      "priority": 84,
+      "decision": "condition_allow",
+      "when": {
+        "all": [
+          {
+            "field": "transfer_outside_korea",
+            "eq": true
+          },
+          {
+            "field": "onward_transfer_controls",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "제3국 재이전 제한 조항",
+        "수령자의 재이전 승인 절차",
+        "하위 수령자 목록"
+      ],
+      "required_actions": [
+        "국외 수령자가 제3국으로 다시 이전하는 경우에도 제28조의8 및 제28조의9 준용 요건을 통제하세요."
+      ],
+      "message": "국외 수령자의 제3국 재이전 통제가 확인되지 않았습니다.",
+      "references": [
+        "국외 이전받은 자의 제3국 이전에 관한 준용규정"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 28-11"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-37-rights-process-gap",
+      "article": 37,
+      "title": "정보주체 권리 대응 절차 미흡",
+      "category": "data_subject_rights",
+      "priority": 81,
+      "decision": "condition_allow",
+      "when": {
+        "field": "data_subject_rights_process_ready",
+        "eq": false
+      },
+      "required_evidence": [
+        "열람ㆍ정정ㆍ삭제ㆍ처리정지ㆍ동의철회 요청 처리 절차",
+        "권리행사 접수 채널"
+      ],
+      "required_actions": [
+        "정보주체 권리행사 접수, 본인확인, 처리기한, 거절 사유 통지 절차를 정리하세요."
+      ],
+      "message": "정보주체 권리 대응 절차가 확인되지 않았습니다.",
+      "references": [
+        "개인정보 처리정지 등",
+        "개인정보 처리방침의 수립 및 공개"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 37 / Art. 30"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-37-2-automated-decision-rights-gap",
+      "article": 37,
+      "title": "자동화된 결정 대응권 미흡",
+      "category": "ai_governance",
+      "priority": 94,
+      "decision": "manual_review",
+      "when": {
+        "all": [
+          {
+            "field": "is_automated_decision_only",
+            "eq": true
+          },
+          {
+            "field": "automated_decision_significant_effect",
+            "eq": true
+          },
+          {
+            "field": "automated_decision_rights_ready",
+            "eq": false
+          }
+        ]
+      },
+      "required_evidence": [
+        "자동화된 결정 설명서",
+        "거부권 및 설명 요구권 안내",
+        "인적 개입ㆍ재처리 절차"
+      ],
+      "required_actions": [
+        "중대한 자동화된 결정에 대해 거부, 설명 요구, 인적 개입 또는 재처리 절차를 마련하세요."
+      ],
+      "message": "완전히 자동화된 결정이 정보주체의 권리 또는 의무에 중대한 영향을 줄 수 있으나 대응권 절차가 확인되지 않았습니다.",
+      "references": [
+        "자동화된 결정에 대한 정보주체의 권리 등"
+      ],
+      "reviewer_notes": [
+        "제15조 제1항 제1호ㆍ제2호ㆍ제4호에 따른 예외 적용 가능성은 법무 검토가 필요합니다.",
+        "Original article label: PIPA Art. 37-2"
+      ],
+      "risk_score_delta": 22,
+      "compliance_score_delta": -10
+    },
+    {
+      "rule_id": "pipa-art-37-2-explanation-or-human-review-gap",
+      "article": 37,
+      "title": "자동화된 결정 설명 또는 인적 개입 부족",
+      "category": "ai_governance",
+      "priority": 90,
+      "decision": "condition_allow",
+      "when": {
+        "all": [
+          {
+            "field": "is_automated_decision_only",
+            "eq": true
+          },
+          {
+            "field": "automated_decision_significant_effect",
+            "eq": true
+          },
+          {
+            "any": [
+              {
+                "field": "provides_explanation",
+                "eq": false
+              },
+              {
+                "field": "human_review_available",
+                "eq": false
+              }
+            ]
+          }
+        ]
+      },
+      "required_evidence": [
+        "설명 제공 절차",
+        "인적 개입 또는 재처리 운영 절차"
+      ],
+      "required_actions": [
+        "자동화된 결정에 대한 설명 제공과 인적 개입/재처리 절차를 실제 운영 프로세스에 반영하세요."
+      ],
+      "message": "자동화된 결정에 대한 설명 제공 또는 인적 개입 절차가 충분히 확인되지 않았습니다.",
+      "references": [
+        "자동화된 결정에 대한 정보주체의 권리 등"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 37-2"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-31-privacy-officer-gap",
+      "article": 31,
+      "title": "개인정보 보호책임자 지정 미흡",
+      "category": "governance",
+      "priority": 70,
+      "decision": "condition_allow",
+      "when": {
+        "field": "privacy_officer_assigned",
+        "eq": false
+      },
+      "required_evidence": [
+        "개인정보 보호책임자 지정 문서",
+        "담당 부서 및 연락처"
+      ],
+      "required_actions": [
+        "개인정보 처리 업무를 총괄할 책임자 또는 담당 부서를 지정하고 처리방침에 반영하세요."
+      ],
+      "message": "개인정보 보호책임자 또는 담당 체계가 확인되지 않았습니다.",
+      "references": [
+        "개인정보 보호책임자의 지정 등"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 31"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-29-breach-response-gap",
+      "article": 29,
+      "title": "침해 대응 절차 미흡",
+      "category": "security",
+      "priority": 68,
+      "decision": "condition_allow",
+      "when": {
+        "field": "breach_response_ready",
+        "eq": false
+      },
+      "required_evidence": [
+        "침해사고 대응 절차",
+        "유출 통지 및 신고 프로세스",
+        "모의훈련 또는 점검 기록"
+      ],
+      "required_actions": [
+        "개인정보 유출 등 사고 발생 시 탐지, 보고, 통지, 보완조치를 수행할 수 있는 대응 절차를 마련하세요."
+      ],
+      "message": "개인정보 유출 등 사고 대응 절차가 확인되지 않았습니다.",
+      "references": [
+        "안전조치의무"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 29"
+      ],
+      "risk_score_delta": 10,
+      "compliance_score_delta": -5
+    },
+    {
+      "rule_id": "pipa-art-28-8-transfer-consent-route-ready",
+      "article": 28,
+      "title": "국외이전 별도 동의 경로 충족",
+      "category": "transfer",
+      "priority": 40,
+      "decision": "allow",
+      "when": {
+        "all": [
+          {
+            "field": "transfer_outside_korea",
+            "eq": true
+          },
+          {
+            "field": "separate_consent_for_transfer",
+            "eq": true
+          },
+          {
+            "field": "cross_border_notice_provided",
+            "eq": true
+          },
+          {
+            "field": "transfer_protection_measures_ready",
+            "eq": true
+          }
+        ]
+      },
+      "required_evidence": [
+        "국외이전 별도 동의서",
+        "제28조의8 제2항 고지 증빙",
+        "국외이전 보호조치 증빙"
+      ],
+      "required_actions": [],
+      "message": "국외이전 별도 동의와 고지, 보호조치가 확인됩니다.",
+      "references": [
+        "개인정보의 국외 이전"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 28-8"
+      ],
+      "risk_score_delta": -10,
+      "compliance_score_delta": 10
+    },
+    {
+      "rule_id": "pipa-art-28-8-transfer-contract-route-ready",
+      "article": 28,
+      "title": "계약 이행상 위탁ㆍ보관 경로 충족",
+      "category": "transfer",
+      "priority": 38,
+      "decision": "allow",
+      "when": {
+        "all": [
+          {
+            "field": "transfer_outside_korea",
+            "eq": true
+          },
+          {
+            "field": "contract_necessity_disclosed_or_notified",
+            "eq": true
+          },
+          {
+            "field": "transfer_protection_measures_ready",
+            "eq": true
+          }
+        ]
+      },
+      "required_evidence": [
+        "계약 체결ㆍ이행 필요성 설명",
+        "처리방침 공개 또는 전자우편 등 통지 증빙",
+        "국외이전 보호조치 증빙"
+      ],
+      "required_actions": [],
+      "message": "계약 체결ㆍ이행을 위한 처리위탁ㆍ보관 경로와 보호조치가 확인됩니다.",
+      "references": [
+        "개인정보의 국외 이전"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 28-8"
+      ],
+      "risk_score_delta": -10,
+      "compliance_score_delta": 10
+    },
+    {
+      "rule_id": "pipa-art-28-8-transfer-certification-or-adequacy-ready",
+      "article": 28,
+      "title": "인증 또는 동등 보호수준 인정 경로 충족",
+      "category": "transfer",
+      "priority": 36,
+      "decision": "allow",
+      "when": {
+        "all": [
+          {
+            "field": "transfer_outside_korea",
+            "eq": true
+          },
+          {
+            "any": [
+              {
+                "field": "pipa_certified_recipient",
+                "eq": true
+              },
+              {
+                "field": "pipa_equivalence_recognition_exists",
+                "eq": true
+              },
+              {
+                "field": "treaty_or_statutory_transfer_basis",
+                "eq": true
+              }
+            ]
+          },
+          {
+            "field": "transfer_protection_measures_ready",
+            "eq": true
+          }
+        ]
+      },
+      "required_evidence": [
+        "인증 증빙, 동등 보호수준 인정 근거, 또는 법률ㆍ조약ㆍ국제협정 근거",
+        "국외이전 보호조치 증빙"
+      ],
+      "required_actions": [],
+      "message": "제28조의8상 국외이전 경로와 보호조치가 확인됩니다.",
+      "references": [
+        "개인정보의 국외 이전"
+      ],
+      "reviewer_notes": [
+        "Original article label: PIPA Art. 28-8"
+      ],
+      "risk_score_delta": -10,
+      "compliance_score_delta": 10
+    }
+  ],
+  "source": {
+    "primary_document": "Korea Personal Information Protection Act",
+    "included_articles": [
+      3,
+      15,
+      16,
+      17,
+      21,
+      22,
+      23,
+      24,
+      26,
+      28,
+      29,
+      30,
+      31,
+      37
+    ],
+    "notes": [
+      "Korea PIPA cross-border transfer and personal information processing review pack.",
+      "Sub-articles such as 24-2, 28-8, 28-11, and 37-2 are represented by their base article number for backend integer compatibility."
+    ]
+  },
+  "decision_priority": {
+    "order": [
+      "deny",
+      "manual_review",
+      "condition_allow",
+      "allow"
+    ],
+    "score_bands": {
+      "low_risk": [
+        0,
+        24
+      ],
+      "moderate_risk": [
+        25,
+        49
+      ],
+      "high_risk": [
+        50,
+        74
+      ],
+      "critical_risk": [
+        75,
+        100
+      ]
+    }
+  },
+  "scoring_policy": {
+    "base_risk_score": 20,
+    "base_compliance_score": 50,
+    "caps": {
+      "min_risk_score": 0,
+      "max_risk_score": 100,
+      "min_compliance_score": 0,
+      "max_compliance_score": 100
+    }
+  },
+  "qualitative_review_templates": {
+    "boundary_summary": {
+      "auto_decidable": "기본 적법근거, 국외이전 경로, 암호화, 위탁계약 여부 등 명시 입력값 기반 항목은 자동 판정 가능합니다.",
+      "manual_review": "민감정보·고유식별정보의 실제 근거, 국외이전 보호조치 실효성, 자동화된 결정의 중대한 영향은 담당자 검토가 필요할 수 있습니다."
+    },
+    "checklist_templates": {
+      "transfer_review": [
+        "국외이전 경로 확인",
+        "고지 항목 확인",
+        "보호조치 및 재이전 통제 확인"
+      ],
+      "processor_review": [
+        "위탁계약서 확인",
+        "수탁자 공개 여부 확인",
+        "수탁자 교육·감독 증빙 확인"
+      ]
+    },
+    "uncertainty_flags": {
+      "sensitive_data_basis": "민감정보 처리 근거는 실제 동의서 또는 법령 근거 확인이 필요합니다.",
+      "unique_identifier_basis": "고유식별정보 처리 근거는 별도 동의 또는 법령 근거 확인이 필요합니다.",
+      "transfer_protection_measures_ready": "국외이전 보호조치의 충분성은 문서 검토가 필요할 수 있습니다."
+    }
+  }
+}

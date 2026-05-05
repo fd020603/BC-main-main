@@ -1,0 +1,22 @@
+{
+  "storage_account_name": "customerrecordsprod",
+  "location": "koreacentral",
+  "encryption": {
+    "services": {
+      "blob": {
+        "enabled": true
+      }
+    }
+  },
+  "supports_https_traffic_only": true,
+  "minimum_tls_version": "TLS1_2",
+  "public_network_access": false,
+  "allow_blob_public_access": false,
+  "network_rule_set": {
+    "default_action": "Deny"
+  },
+  "tags": {
+    "data_type": "customer_records",
+    "classification": "customer_records"
+  }
+}

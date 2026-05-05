@@ -1,0 +1,31 @@
+{
+  "provider": "aws",
+  "resource_type": "s3_bucket",
+  "resource_id": "customer-records-prod",
+  "normalized_aws_data": {
+    "current_region": "ap-northeast-2",
+    "encryption_at_rest": true,
+    "encryption_in_transit": true,
+    "access_control_in_place": true,
+    "contains_sensitive_data": null,
+    "data_type": "customer_records",
+    "uses_processor": null
+  },
+  "evidence": [
+    {
+      "field": "current_region",
+      "value": "ap-northeast-2",
+      "source": "s3.get_bucket_location",
+      "confidence": "high"
+    },
+    {
+      "field": "contains_sensitive_data",
+      "value": null,
+      "source": "not_available_without_macie_or_manual_confirmation",
+      "confidence": "unknown"
+    }
+  ],
+  "warnings": [
+    "contains_sensitive_data cannot be confirmed without Macie/Purview/classification result or manual review."
+  ]
+}

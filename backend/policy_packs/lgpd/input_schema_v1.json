@@ -1,0 +1,553 @@
+{
+  "schema_id": "lgpd_input_schema_v1",
+  "schema_name": "Brazil LGPD Cross-Border Review Input Schema",
+  "version": "1.0.0",
+  "description": "Hybrid input schema for policy-based review of Brazil LGPD international transfer scenarios, privacy notice and data subject rights readiness, processor governance, ANPD-approved safeguards, transparency obligations, and risk/accountability controls.",
+  "groups": {
+    "collected_fields": {
+      "auto": {
+        "current_region": {
+          "type": "string",
+          "required": true,
+          "description": "Current region or hosting location where the dataset is stored or processed.",
+          "example": "br-sao-paulo-dc",
+          "source": "cloud_config_or_architecture_inventory"
+        },
+        "encryption_at_rest": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": true,
+          "description": "Whether encryption at rest is enabled for the target dataset or resource.",
+          "example": true,
+          "source": "cloud_config"
+        }
+      },
+      "semi_auto": {
+        "data_type": {
+          "type": "string",
+          "required": false,
+          "description": "Detected or inferred dataset type.",
+          "example": "customer_profiles",
+          "source": "data_inventory_or_tagging"
+        },
+        "contains_sensitive_data": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether the dataset appears to contain sensitive personal data under the LGPD, such as health, biometric, genetic, racial or ethnic origin, religious belief, political opinion, union membership, or sex life data.",
+          "example": true,
+          "source": "classification_tool_or_manual_confirmation"
+        },
+        "uses_processor": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether a processor/operator, subcontractor, or hosted service provider is involved in the processing or transfer path.",
+          "example": true,
+          "source": "vendor_mapping_or_manual_confirmation"
+        },
+        "encryption_in_transit": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether transport encryption is enabled.",
+          "example": true,
+          "source": "architecture_review"
+        },
+        "access_control_in_place": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether baseline access control is configured.",
+          "example": true,
+          "source": "iam_or_access_review"
+        }
+      }
+    },
+    "manual_context_fields": {
+      "dataset_name": {
+        "type": "string",
+        "required": true,
+        "description": "Human-readable name of the dataset being evaluated.",
+        "example": "br-customer-master"
+      },
+      "data_subject_connection": {
+        "type": "string",
+        "required": true,
+        "enum": [
+          "BRAZIL_RESIDENT",
+          "COLLECTED_IN_BRAZIL",
+          "OFFER_GOODS_OR_SERVICES_IN_BRAZIL",
+          "PROCESSING_IN_BRAZIL",
+          "OTHER"
+        ],
+        "description": "Connection of the data subject, collection, offering, or processing context to Brazil.",
+        "example": "COLLECTED_IN_BRAZIL"
+      },
+      "processing_purpose_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether the processing purpose and international transfer purpose are clearly defined and documented.",
+        "example": true
+      },
+      "data_minimized": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether only personal data necessary, relevant, proportional, and non-excessive for the transfer purpose is used.",
+        "example": true
+      },
+      "retention_period_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether retention or deletion period is documented.",
+        "example": true
+      },
+      "processing_legal_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": true,
+        "enum": [
+          "consent",
+          "legal_or_regulatory_obligation",
+          "public_policy",
+          "research",
+          "contract_or_precontract",
+          "judicial_administrative_arbitration",
+          "life_or_physical_safety",
+          "health_protection",
+          "legitimate_interest",
+          "credit_protection",
+          null
+        ],
+        "description": "Primary LGPD legal basis for processing personal data under Article 7, or the closest applicable basis for the activity.",
+        "example": "contract_or_precontract"
+      },
+      "sensitive_data_legal_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": false,
+        "enum": [
+          "consent",
+          "legal_or_regulatory_obligation",
+          "public_policy",
+          "research",
+          "judicial_administrative_arbitration",
+          "life_or_physical_safety",
+          "health_protection",
+          "fraud_prevention_security",
+          null
+        ],
+        "description": "Specific LGPD Article 11 basis when sensitive personal data is processed.",
+        "example": "consent"
+      },
+      "specific_highlighted_consent_for_sensitive_data": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether specific and highlighted consent for specific purposes is documented when sensitive data is processed on a consent basis.",
+        "example": true
+      },
+      "legitimate_interest_assessment_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a legitimate interest assessment, necessity review, expectation check, and transparency measures are documented when legitimate interest is used.",
+        "example": true
+      },
+      "privacy_policy_available": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a controller privacy policy or equivalent privacy notice is published or otherwise available.",
+        "example": true
+      },
+      "data_subject_rights_request_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether workflows exist to respond to confirmation, access, correction, anonymization, blocking, deletion, portability, information, objection, and consent withdrawal requests.",
+        "example": true
+      },
+      "consent_withdrawal_process_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a practical consent withdrawal process exists when consent is the legal basis.",
+        "example": true
+      },
+      "international_transfer_transparency_document_available": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a Portuguese, simple, clear, precise, and accessible document or privacy policy section describes the international transfer as required by ANPD Resolution No. 19/2024.",
+        "example": true
+      },
+      "full_transfer_clauses_request_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the controller can provide, upon request and subject to trade/industrial secrecy, the full text of clauses used for international transfers within the applicable deadline.",
+        "example": true
+      },
+      "target_region": {
+        "type": "string",
+        "required": true,
+        "description": "Target region, hosting location, importer location, or international organization selected for storage, access, processing, or transfer.",
+        "example": "us-east-1"
+      },
+      "adequacy_decision_confirmed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether an ANPD adequacy decision recognizes the destination country or international organization as providing an adequate level of data protection for the transfer.",
+        "example": false
+      },
+      "standard_contractual_clauses_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether ANPD-approved standard contractual clauses are in place for the transfer.",
+        "example": true
+      },
+      "standard_contractual_clauses_full_unaltered": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the ANPD standard contractual clauses are adopted fully and without alteration in the relevant contract or addendum.",
+        "example": true
+      },
+      "legacy_contractual_clauses_used": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the transfer still relies on older or non-ANPD contractual clauses for international transfer.",
+        "example": false
+      },
+      "anpd_scc_migration_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether any required migration from legacy contractual clauses to ANPD SCCs has been completed.",
+        "example": true
+      },
+      "specific_contractual_clauses_used": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether specific contractual clauses are used instead of ANPD SCCs due to exceptional factual or legal circumstances.",
+        "example": false
+      },
+      "specific_contractual_clauses_anpd_approved": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether ANPD has approved the specific contractual clauses used for the transfer.",
+        "example": false
+      },
+      "binding_corporate_rules_used": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether binding corporate rules are used for intra-group international transfer.",
+        "example": false
+      },
+      "binding_corporate_rules_anpd_approved": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether ANPD has approved the binding corporate rules and the current transfer is within their covered group, countries, and purposes.",
+        "example": false
+      },
+      "certification_or_code_approved": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether an ANPD-recognized certification, seal, or code of conduct supports the international transfer.",
+        "example": false
+      },
+      "transfer_exception_used": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether a specific LGPD Article 33 transfer mechanism or exception is relied on instead of adequacy or ANPD-approved safeguards.",
+        "example": false
+      },
+      "transfer_exception_type": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": false,
+        "enum": [
+          "international_legal_cooperation",
+          "life_or_physical_safety",
+          "anpd_authorization",
+          "public_policy",
+          "specific_informed_consent_for_international_transfer",
+          "legal_obligation_contract_or_judicial",
+          "research",
+          null
+        ],
+        "description": "Specific LGPD Article 33 mechanism or exception if such a path is used.",
+        "example": null
+      },
+      "subsequent_transfer_expected": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the importer is expected to carry out subsequent or onward transfers.",
+        "example": false
+      },
+      "subsequent_transfer_controls_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether subsequent transfer restrictions, conditions, and safeguards are contractually and operationally addressed.",
+        "example": true
+      },
+      "large_scale_or_continuous_transfer": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the transfer is continuous, repetitive, or large-scale, especially for sensitive or high-risk data.",
+        "example": true
+      },
+      "large_scale_or_high_risk_processing": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the processing activity is large-scale or otherwise high-risk based on data nature, volume, context, purpose, or data subject impact.",
+        "example": true
+      },
+      "processor_agreement_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a processor/operator agreement, written instructions, or equivalent binding terms are in place.",
+        "example": true
+      },
+      "processor_compliance_verified": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether processor/operator compliance, guarantees, and security measures were verified by the controller.",
+        "example": true
+      },
+      "subprocessor_or_onward_transfer_controls": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether subprocessor, subcontractor, onward transfer, and importer controls are contractually addressed.",
+        "example": true
+      },
+      "records_of_processing_exists": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether records of personal data processing operations exist and include the relevant transfer facts.",
+        "example": true
+      },
+      "dpo_or_encarregado_assigned": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the LGPD officer/encarregado or responsible privacy contact has been assigned and contact channels are documented.",
+        "example": true
+      },
+      "data_protection_impact_report_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a data protection impact report, privacy impact assessment, or similar risk review was completed for the activity where appropriate.",
+        "example": true
+      },
+      "security_incident_response_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether security incident handling, risk assessment, ANPD/data subject notification, and recordkeeping readiness are documented.",
+        "example": true
+      }
+    },
+    "derived_fields": {
+      "target_country": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Country mapped from target_region or importer location."
+      },
+      "target_country_known": {
+        "type": "boolean",
+        "description": "Whether target_region or importer location could be mapped to a country code or international organization."
+      },
+      "transfer_outside_brazil": {
+        "type": "boolean",
+        "description": "Whether the transfer destination/importer is outside Brazil or is an international organization."
+      },
+      "lgpd_scope_applies": {
+        "type": "boolean",
+        "description": "Whether the scenario appears within LGPD territorial/material scope based on processing in Brazil, offering goods/services to individuals in Brazil, processing data of individuals located in Brazil, or data collected in Brazil."
+      },
+      "appropriate_transfer_mechanism_available": {
+        "type": "boolean",
+        "description": "Whether ANPD SCCs, ANPD-approved specific contractual clauses, ANPD-approved binding corporate rules, or ANPD-recognized certification/code safeguards are present and not disqualified by missing approval/full adoption checks."
+      },
+      "baseline_security_controls_ready": {
+        "type": "boolean",
+        "description": "Whether encryption at rest, encryption in transit, and access control are all confirmed."
+      },
+      "international_transfer_transparency_required": {
+        "type": "boolean",
+        "description": "Whether a public transparency document or privacy policy disclosure should describe the international transfer."
+      }
+    }
+  },
+  "collection_strategy": {
+    "auto_sources": {
+      "cloud_config": [
+        "current_region",
+        "encryption_at_rest"
+      ],
+      "region_mapping": [
+        "target_country",
+        "transfer_outside_brazil"
+      ]
+    },
+    "semi_auto_sources": {
+      "data_inventory": [
+        "data_type",
+        "contains_sensitive_data"
+      ],
+      "architecture_inference": [
+        "uses_processor",
+        "encryption_in_transit",
+        "access_control_in_place",
+        "subsequent_transfer_expected"
+      ]
+    },
+    "manual_sources": {
+      "business_and_privacy_questionnaire": [
+        "dataset_name",
+        "data_subject_connection",
+        "processing_purpose_defined",
+        "data_minimized",
+        "retention_period_defined",
+        "processing_legal_basis",
+        "sensitive_data_legal_basis",
+        "specific_highlighted_consent_for_sensitive_data",
+        "legitimate_interest_assessment_completed",
+        "privacy_policy_available",
+        "data_subject_rights_request_ready",
+        "consent_withdrawal_process_ready",
+        "international_transfer_transparency_document_available",
+        "full_transfer_clauses_request_ready",
+        "target_region",
+        "adequacy_decision_confirmed",
+        "standard_contractual_clauses_in_place",
+        "standard_contractual_clauses_full_unaltered",
+        "legacy_contractual_clauses_used",
+        "anpd_scc_migration_completed",
+        "specific_contractual_clauses_used",
+        "specific_contractual_clauses_anpd_approved",
+        "binding_corporate_rules_used",
+        "binding_corporate_rules_anpd_approved",
+        "certification_or_code_approved",
+        "transfer_exception_used",
+        "transfer_exception_type",
+        "subsequent_transfer_expected",
+        "subsequent_transfer_controls_in_place",
+        "large_scale_or_continuous_transfer",
+        "large_scale_or_high_risk_processing",
+        "processor_agreement_in_place",
+        "processor_compliance_verified",
+        "subprocessor_or_onward_transfer_controls",
+        "records_of_processing_exists",
+        "dpo_or_encarregado_assigned",
+        "data_protection_impact_report_completed",
+        "security_incident_response_ready"
+      ]
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "current_region": "eu-central-1",
+  "encryption_at_rest": true,
+  "data_type": "analytics_events",
+  "contains_sensitive_data": false,
+  "uses_processor": true,
+  "encryption_in_transit": true,
+  "access_control_in_place": true
+}

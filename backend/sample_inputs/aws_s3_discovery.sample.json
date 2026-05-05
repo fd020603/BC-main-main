@@ -1,0 +1,21 @@
+{
+  "bucket_name": "customer-records-prod",
+  "region": "ap-northeast-2",
+  "encryption": {
+    "default_sse_enabled": true
+  },
+  "bucket_policy": {
+    "secure_transport_required": true
+  },
+  "public_access_block": {
+    "BlockPublicAcls": true,
+    "IgnorePublicAcls": true,
+    "BlockPublicPolicy": true,
+    "RestrictPublicBuckets": true
+  },
+  "tags": {
+    "data_type": "customer_records",
+    "environment": "prod",
+    "uses_processor": "unknown"
+  }
+}

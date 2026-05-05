@@ -1,0 +1,590 @@
+{
+  "schema_id": "taiwan_input_schema_v1",
+  "schema_name": "Taiwan PDPA Privacy and Cross-Border Review Input Schema",
+  "version": "1.0.0",
+  "description": "Hybrid input schema for policy-based review of Taiwan PDPA collection, processing, use, sensitive personal data, data subject rights, marketing, commissioned processing, security maintenance, breach notification, and cross-border transfer restriction scenarios.",
+  "groups": {
+    "collected_fields": {
+      "auto": {
+        "current_region": {
+          "type": "string",
+          "required": true,
+          "description": "Current region or hosting location where the dataset is stored or processed.",
+          "example": "tw-taipei-dc",
+          "source": "cloud_config_or_architecture_inventory"
+        },
+        "encryption_at_rest": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": true,
+          "description": "Whether encryption at rest is enabled for the target dataset or resource.",
+          "example": true,
+          "source": "cloud_config"
+        }
+      },
+      "semi_auto": {
+        "data_type": {
+          "type": "string",
+          "required": false,
+          "description": "Detected or inferred dataset type.",
+          "example": "customer_profiles",
+          "source": "data_inventory_or_tagging"
+        },
+        "contains_article6_sensitive_data": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether the dataset appears to contain Taiwan PDPA Article 6 sensitive data: medical records, healthcare, genetic data, sex life, physical examination, or criminal records.",
+          "example": false,
+          "source": "classification_tool_or_manual_confirmation"
+        },
+        "uses_commissioned_processor": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether a commissioned party, vendor, or hosted service provider collects, processes, or uses personal data on behalf of the agency.",
+          "example": true,
+          "source": "vendor_mapping_or_manual_confirmation"
+        },
+        "encryption_in_transit": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether transport encryption is enabled.",
+          "example": true,
+          "source": "architecture_review"
+        },
+        "access_control_in_place": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether baseline access control is configured.",
+          "example": true,
+          "source": "iam_or_access_review"
+        }
+      }
+    },
+    "manual_context_fields": {
+      "dataset_name": {
+        "type": "string",
+        "required": true,
+        "description": "Human-readable name of the dataset being evaluated.",
+        "example": "tw-customer-master"
+      },
+      "agency_type": {
+        "type": "string",
+        "required": true,
+        "enum": [
+          "government_agency",
+          "non_government_agency"
+        ],
+        "description": "Whether the actor is a government agency or non-government agency under Taiwan PDPA.",
+        "example": "non_government_agency"
+      },
+      "specific_purpose_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether the specific purpose for collection, processing, and use is clearly defined.",
+        "example": true
+      },
+      "purpose_necessity_review_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the activity stays within the necessary scope of the specific purpose and has a legitimate and reasonable connection with the collection purpose.",
+        "example": true
+      },
+      "collection_processing_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": true,
+        "enum": [
+          "law_expressly_required",
+          "statutory_duty_or_obligation",
+          "contract_or_quasi_contract_with_security",
+          "data_subject_consent",
+          "publicly_disclosed_by_subject_or_lawfully_public",
+          "academic_or_statistical_research_deidentified",
+          "public_interest",
+          "publicly_available_source",
+          "no_infringement_of_rights",
+          "beneficial_to_data_subject",
+          "vital_or_harm_prevention",
+          "other_legal_basis",
+          null
+        ],
+        "description": "Primary Taiwan PDPA basis for collection or processing. Select the value applicable to the agency type and scenario.",
+        "example": "contract_or_quasi_contract_with_security"
+      },
+      "contains_article6_sensitive_data": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether Article 6 sensitive categories are involved: medical records, healthcare, genetics, sex life, physical examination, or criminal records.",
+        "example": false
+      },
+      "sensitive_data_exception_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": false,
+        "enum": [
+          "law_expressly_required",
+          "statutory_duty_or_legal_obligation_with_security",
+          "publicly_disclosed_by_subject_or_lawfully_public",
+          "health_public_health_crime_prevention_research_deidentified",
+          "assist_statutory_duty_or_obligation_with_security",
+          "written_consent",
+          null
+        ],
+        "description": "Article 6 exception basis for sensitive personal data, if applicable.",
+        "example": null
+      },
+      "written_consent_for_sensitive_data": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether written consent is documented for Article 6 sensitive data when relying on the written-consent exception.",
+        "example": null
+      },
+      "consent_freely_given": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether consent appears to be freely given and not contrary to the data subject's will.",
+        "example": true
+      },
+      "consent_proof_available": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the data collector can prove consent where consent is relied upon.",
+        "example": true
+      },
+      "collected_directly_from_data_subject": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether personal data is collected directly from the data subject.",
+        "example": true
+      },
+      "article8_notice_provided": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether Article 8 notice was provided: agency name, purpose, categories, time period/territory/recipients/methods, rights and exercise method, and impact of non-provision.",
+        "example": true
+      },
+      "article8_notice_exemption_applies": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether an Article 8 notice exemption applies.",
+        "example": false
+      },
+      "indirect_collection_notice_required": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether Article 9 notice is required because data was not provided by the data subject and no exemption applies.",
+        "example": false
+      },
+      "article9_source_notice_provided": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the source of personal data and required Article 8 items were provided before processing/use or at first use where allowed.",
+        "example": null
+      },
+      "data_subject_rights_request_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether workflows exist to respond to inquiry, review, copy, supplement/correction, cessation, and erasure requests.",
+        "example": true
+      },
+      "rights_deadline_tracking_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether Article 13 deadlines are tracked: 15 days for Article 10 requests and 30 days for Article 11 requests, with allowed extensions and written notice.",
+        "example": true
+      },
+      "data_accuracy_review_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether personal data accuracy, correction, supplementation, and disputed-accuracy controls were reviewed.",
+        "example": true
+      },
+      "retention_period_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether retention period, purpose-expiry deletion, and cessation of processing/use are documented.",
+        "example": true
+      },
+      "use_outside_original_specific_purpose": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether personal data will be used outside the original specific purpose of collection.",
+        "example": false
+      },
+      "outside_purpose_use_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": false,
+        "enum": [
+          "law_expressly_required",
+          "national_security_or_public_interest",
+          "prevent_harm_to_life_body_freedom_property",
+          "prevent_material_harm_to_others",
+          "academic_or_statistical_research_deidentified",
+          "consent",
+          "beneficial_to_data_subject",
+          null
+        ],
+        "description": "Basis for use outside the original specific purpose, if applicable.",
+        "example": null
+      },
+      "separate_consent_for_outside_purpose": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether separate consent was obtained after informing the data subject of the other purpose, scope, and impact on rights/interests.",
+        "example": null
+      },
+      "uses_data_for_marketing": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the non-government agency uses personal data for marketing.",
+        "example": false
+      },
+      "marketing_optout_mechanism_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether opt-out means are provided at first marketing use and objections are honored immediately at the agency's cost.",
+        "example": true
+      },
+      "data_subject_objected_public_source_processing": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a data subject objected to processing/use of publicly available source data based on an overriding protected interest.",
+        "example": false
+      },
+      "public_source_objection_handled": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the public-source objection was handled by deleting or ceasing processing/use where appropriate.",
+        "example": true
+      },
+      "breach_notification_process_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether breach fact-finding and data subject notification process is documented for theft, disclosure, alteration, or other infringement due to PDPA violation.",
+        "example": true
+      },
+      "security_maintenance_measures_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether appropriate security and maintenance measures are in place to prevent theft, alteration, damage, destruction, or disclosure.",
+        "example": true
+      },
+      "industry_security_plan_required": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the competent industry authority requires a security and maintenance plan and business-termination disposal rules for this non-government agency.",
+        "example": false
+      },
+      "industry_security_plan_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the required security and maintenance plan and business-termination disposal rules are in place.",
+        "example": null
+      },
+      "uses_commissioned_processor": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a commissioned party is used to collect, process, or use personal data.",
+        "example": true
+      },
+      "commissioned_processor_terms_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether written instructions or binding terms cover commissioned processing, security, purpose limits, rights support, return/deletion, and oversight.",
+        "example": true
+      },
+      "target_region": {
+        "type": "string",
+        "required": true,
+        "description": "Target region or hosting location selected for storage, processing, use, or transfer.",
+        "example": "jp-tokyo-1"
+      },
+      "cross_border_transfer": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether the scenario involves cross-border processing or use of personal data under Taiwan PDPA Article 2.",
+        "example": true
+      },
+      "recipient_country_protection_adequate": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the receiving country or territory has proper personal data protection regulations such that data subject rights are unlikely to be harmed.",
+        "example": true
+      },
+      "major_national_interest_involved": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the cross-border transfer may involve major national interests.",
+        "example": false
+      },
+      "treaty_or_agreement_restriction_known": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether an international treaty or agreement specially restricts the transfer.",
+        "example": false
+      },
+      "third_country_circumvention_risk": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the transfer path may route data through a third country or territory to circumvent Taiwan PDPA.",
+        "example": false
+      },
+      "authority_transfer_restriction_applies": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a competent industry authority restriction, order, or decision applies to the transfer.",
+        "example": false
+      }
+    },
+    "derived_fields": {
+      "target_country": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Country or territory mapped from target_region."
+      },
+      "target_country_known": {
+        "type": "boolean",
+        "description": "Whether target_region could be mapped to a country or territory."
+      },
+      "transfer_outside_taiwan": {
+        "type": "boolean",
+        "description": "Whether the target country or territory is outside Taiwan."
+      },
+      "baseline_security_controls_ready": {
+        "type": "boolean",
+        "description": "Whether encryption at rest, encryption in transit, and access control are all confirmed."
+      },
+      "article21_restriction_risk_present": {
+        "type": "boolean",
+        "description": "Whether any Article 21 cross-border transfer restriction risk factor is present."
+      }
+    }
+  },
+  "collection_strategy": {
+    "auto_sources": {
+      "cloud_config": [
+        "current_region",
+        "encryption_at_rest"
+      ],
+      "region_mapping": [
+        "target_country",
+        "target_country_known",
+        "transfer_outside_taiwan"
+      ]
+    },
+    "semi_auto_sources": {
+      "data_inventory": [
+        "data_type",
+        "contains_article6_sensitive_data"
+      ],
+      "architecture_inference": [
+        "uses_commissioned_processor",
+        "encryption_in_transit",
+        "access_control_in_place"
+      ]
+    },
+    "manual_sources": {
+      "business_and_privacy_questionnaire": [
+        "dataset_name",
+        "agency_type",
+        "specific_purpose_defined",
+        "purpose_necessity_review_completed",
+        "collection_processing_basis",
+        "sensitive_data_exception_basis",
+        "written_consent_for_sensitive_data",
+        "consent_freely_given",
+        "consent_proof_available",
+        "collected_directly_from_data_subject",
+        "article8_notice_provided",
+        "article8_notice_exemption_applies",
+        "indirect_collection_notice_required",
+        "article9_source_notice_provided",
+        "data_subject_rights_request_ready",
+        "rights_deadline_tracking_ready",
+        "data_accuracy_review_completed",
+        "retention_period_defined",
+        "use_outside_original_specific_purpose",
+        "outside_purpose_use_basis",
+        "separate_consent_for_outside_purpose",
+        "uses_data_for_marketing",
+        "marketing_optout_mechanism_ready",
+        "data_subject_objected_public_source_processing",
+        "public_source_objection_handled",
+        "breach_notification_process_ready",
+        "security_maintenance_measures_ready",
+        "industry_security_plan_required",
+        "industry_security_plan_in_place",
+        "commissioned_processor_terms_in_place",
+        "target_region",
+        "cross_border_transfer",
+        "recipient_country_protection_adequate",
+        "major_national_interest_involved",
+        "treaty_or_agreement_restriction_known",
+        "third_country_circumvention_risk",
+        "authority_transfer_restriction_applies"
+      ]
+    }
+  },
+  "derived_logic": {
+    "target_country_known": "target_country != null",
+    "transfer_outside_taiwan": "target_country_known && target_country not in ['TW','Taiwan']",
+    "cross_border_transfer": "manual cross_border_transfer if provided, otherwise transfer_outside_taiwan",
+    "baseline_security_controls_ready": "encryption_at_rest == true && encryption_in_transit == true && access_control_in_place == true",
+    "article21_restriction_risk_present": "major_national_interest_involved == true || treaty_or_agreement_restriction_known == true || recipient_country_protection_adequate == false || third_country_circumvention_risk == true || authority_transfer_restriction_applies == true"
+  },
+  "recommended_question_order": [
+    "dataset_name",
+    "agency_type",
+    "specific_purpose_defined",
+    "collection_processing_basis",
+    "contains_article6_sensitive_data",
+    "sensitive_data_exception_basis",
+    "collected_directly_from_data_subject",
+    "article8_notice_provided",
+    "data_subject_rights_request_ready",
+    "retention_period_defined",
+    "security_maintenance_measures_ready",
+    "uses_commissioned_processor",
+    "commissioned_processor_terms_in_place",
+    "use_outside_original_specific_purpose",
+    "uses_data_for_marketing",
+    "target_region",
+    "cross_border_transfer",
+    "recipient_country_protection_adequate",
+    "major_national_interest_involved",
+    "treaty_or_agreement_restriction_known",
+    "third_country_circumvention_risk",
+    "authority_transfer_restriction_applies"
+  ],
+  "validation_notes": [
+    "If contains_article6_sensitive_data is true, sensitive_data_exception_basis should be supplied.",
+    "If sensitive_data_exception_basis is written_consent, written_consent_for_sensitive_data and consent_freely_given should be supplied.",
+    "If collected_directly_from_data_subject is false, indirect_collection_notice_required and article9_source_notice_provided should be evaluated.",
+    "If use_outside_original_specific_purpose is true, outside_purpose_use_basis should be supplied.",
+    "If outside_purpose_use_basis is consent, separate_consent_for_outside_purpose should be supplied.",
+    "If cross_border_transfer is true, Article 21 risk factors should be evaluated.",
+    "If uses_commissioned_processor is true, commissioned_processor_terms_in_place should be supplied."
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "3341a89c-de43-45c4-893d-2b986e4f8eec": {
+    "connection_id": "3341a89c-de43-45c4-893d-2b986e4f8eec",
+    "connection_name": "demo",
+    "provider": "aws",
+    "region": "ap-northeast-2",
+    "external_id": "08369f45-ac77-4187-ae5d-6c41257a4a74",
+    "role_arn": null,
+    "status": "pending",
+    "created_at": "2026-05-05T08:56:21.365005+00:00",
+    "updated_at": "2026-05-05T08:56:21.365023+00:00"
+  },
+  "e11c20e6-8b87-4c35-af06-9fecdcc4824f": {
+    "connection_id": "e11c20e6-8b87-4c35-af06-9fecdcc4824f",
+    "connection_name": "demo",
+    "provider": "aws",
+    "region": "ap-northeast-2",
+    "external_id": "9d519804-6862-4daa-b6c0-da3a83e1662b",
+    "role_arn": null,
+    "status": "pending",
+    "created_at": "2026-05-05T09:24:32.082113+00:00",
+    "updated_at": "2026-05-05T09:24:32.082141+00:00"
+  },
+  "f1be875f-c2a7-4a89-acdb-7a02ac4b9de1": {
+    "connection_id": "f1be875f-c2a7-4a89-acdb-7a02ac4b9de1",
+    "connection_name": "demo",
+    "provider": "aws",
+    "region": "ap-northeast-2",
+    "external_id": "ff376228-01fb-4001-a680-b4f8cd744056",
+    "role_arn": null,
+    "status": "pending",
+    "created_at": "2026-05-05T09:25:06.808655+00:00",
+    "updated_at": "2026-05-05T09:25:06.808675+00:00"
+  },
+  "a69b7eeb-4648-46b7-a064-6e9534fea40b": {
+    "connection_id": "a69b7eeb-4648-46b7-a064-6e9534fea40b",
+    "connection_name": "demo",
+    "provider": "aws",
+    "region": "ap-northeast-2",
+    "external_id": "207ca227-6cd4-4907-8885-821f9982644a",
+    "role_arn": null,
+    "status": "pending",
+    "created_at": "2026-05-05T09:34:25.080154+00:00",
+    "updated_at": "2026-05-05T09:34:25.080179+00:00"
+  },
+  "ba32c98c-5090-44b5-9293-1cb7fdb2eefc": {
+    "connection_id": "ba32c98c-5090-44b5-9293-1cb7fdb2eefc",
+    "connection_name": "demo",
+    "provider": "aws",
+    "region": "ap-northeast-2",
+    "external_id": "11940f78-160d-4384-b40f-185e491656e0",
+    "role_arn": null,
+    "status": "pending",
+    "created_at": "2026-05-05T09:41:51.844184+00:00",
+    "updated_at": "2026-05-05T09:41:51.844203+00:00"
+  },
+  "639413c9-bf3e-4e7e-8129-9f50879ba5fa": {
+    "connection_id": "639413c9-bf3e-4e7e-8129-9f50879ba5fa",
+    "connection_name": "demo",
+    "provider": "aws",
+    "region": "ap-northeast-2",
+    "external_id": "23640346-f8c1-4da4-a485-6d039b26fcd2",
+    "role_arn": null,
+    "status": "pending",
+    "created_at": "2026-05-05T09:54:07.978703+00:00",
+    "updated_at": "2026-05-05T09:54:07.978720+00:00"
+  },
+  "8e392c5b-9f19-47a7-9f3b-0397d290312e": {
+    "connection_id": "8e392c5b-9f19-47a7-9f3b-0397d290312e",
+    "connection_name": "demo",
+    "provider": "aws",
+    "region": "ap-northeast-2",
+    "external_id": "73ec54d0-d75c-44c8-a00c-3c5e125f4459",
+    "role_arn": null,
+    "status": "pending",
+    "created_at": "2026-05-05T09:57:02.579764+00:00",
+    "updated_at": "2026-05-05T09:57:02.579784+00:00"
+  },
+  "5fe8b126-4f00-4bdf-994a-922f3a5a6603": {
+    "connection_id": "5fe8b126-4f00-4bdf-994a-922f3a5a6603",
+    "connection_name": "demo",
+    "provider": "aws",
+    "region": "ap-northeast-2",
+    "external_id": "141564a6-5050-4471-9c05-23a2e3b13076",
+    "role_arn": null,
+    "status": "pending",
+    "created_at": "2026-05-05T10:08:57.146581+00:00",
+    "updated_at": "2026-05-05T10:08:57.146598+00:00"
+  }
+}

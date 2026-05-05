@@ -1,0 +1,447 @@
+{
+  "schema_id": "saudi_pdpl_input_schema_v1",
+  "schema_name": "Saudi PDPL Cross-Border Review Input Schema",
+  "version": "1.1.0",
+  "description": "Hybrid input schema for policy-based review of Saudi PDPL transfer scenarios, privacy policy and rights readiness, processor governance, approved safeguards, and risk-assessment obligations.",
+  "groups": {
+    "collected_fields": {
+      "auto": {
+        "current_region": {
+          "type": "string",
+          "required": true,
+          "description": "Current region or hosting location where the dataset is stored or processed.",
+          "example": "sa-riyadh-dc",
+          "source": "cloud_config_or_architecture_inventory"
+        },
+        "encryption_at_rest": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": true,
+          "description": "Whether encryption at rest is enabled for the target dataset or resource.",
+          "example": true,
+          "source": "cloud_config"
+        }
+      },
+      "semi_auto": {
+        "data_type": {
+          "type": "string",
+          "required": false,
+          "description": "Detected or inferred dataset type.",
+          "example": "customer_profiles",
+          "source": "data_inventory_or_tagging"
+        },
+        "contains_sensitive_data": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether the dataset appears to contain sensitive personal data.",
+          "example": true,
+          "source": "classification_tool_or_manual_confirmation"
+        },
+        "uses_processor": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether a processor or hosted service provider is involved in the transfer path.",
+          "example": true,
+          "source": "vendor_mapping_or_manual_confirmation"
+        },
+        "encryption_in_transit": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether transport encryption is enabled.",
+          "example": true,
+          "source": "architecture_review"
+        },
+        "access_control_in_place": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "description": "Whether baseline access control is configured.",
+          "example": true,
+          "source": "iam_or_access_review"
+        }
+      }
+    },
+    "manual_context_fields": {
+      "dataset_name": {
+        "type": "string",
+        "required": true,
+        "description": "Human-readable name of the dataset being evaluated.",
+        "example": "ksa-customer-master"
+      },
+      "data_subject_connection": {
+        "type": "string",
+        "required": true,
+        "enum": [
+          "KSA_RESIDENT",
+          "COLLECTED_IN_KSA",
+          "OTHER"
+        ],
+        "description": "Connection of the data subject or processing context to the Kingdom.",
+        "example": "KSA_RESIDENT"
+      },
+      "processing_purpose_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether the processing purpose is clearly defined and documented.",
+        "example": true
+      },
+      "data_minimized": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether only the minimum personal data necessary for the transfer is used.",
+        "example": true
+      },
+      "retention_period_defined": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether retention or deletion period is documented.",
+        "example": true
+      },
+      "processing_legal_basis": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": true,
+        "enum": [
+          "consent",
+          "contractual_necessity",
+          "legal_obligation",
+          "public_interest",
+          "vital_interest",
+          "legitimate_interest",
+          null
+        ],
+        "description": "Primary Saudi PDPL legal basis or exception relied on for processing.",
+        "example": "consent"
+      },
+      "explicit_consent_for_sensitive_data": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether explicit consent is documented when sensitive data is processed on a consent basis.",
+        "example": true
+      },
+      "privacy_policy_available": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a controller privacy policy is published or otherwise made available as required.",
+        "example": true
+      },
+      "data_subject_rights_request_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether workflows exist to respond to access, copy, correction, destruction, and other rights requests.",
+        "example": true
+      },
+      "consent_withdrawal_process_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a practical consent withdrawal process exists when consent is the legal basis.",
+        "example": true
+      },
+      "data_accuracy_review_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether personal data accuracy, completeness, and update controls were reviewed.",
+        "example": true
+      },
+      "privacy_notice_available": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the required privacy notice information is available to the data subject.",
+        "example": true
+      },
+      "cross_border_notice_provided": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether cross-border transfer information is disclosed where relevant.",
+        "example": true
+      },
+      "target_region": {
+        "type": "string",
+        "required": true,
+        "description": "Target region or hosting location selected for storage or transfer.",
+        "example": "us-east-1"
+      },
+      "adequate_protection_confirmed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether an officially recognized adequate level of protection or equivalent approved basis has been confirmed for the destination.",
+        "example": false
+      },
+      "binding_common_rules_approved": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether approved binding common rules are available for the transfer.",
+        "example": false
+      },
+      "standard_contractual_clauses_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether Saudi-recognized standard contractual clauses or equivalent approved clauses are in place.",
+        "example": true
+      },
+      "certification_or_code_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether an approved certification or binding code of conduct is in place for the transfer.",
+        "example": false
+      },
+      "transfer_exception_used": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": true,
+        "description": "Whether a narrow transfer exception is relied on instead of adequate protection or safeguards.",
+        "example": false
+      },
+      "transfer_exception_type": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "required": false,
+        "enum": [
+          "data_subject_contract",
+          "public_interest_public_entity",
+          "crime_detection_public_entity",
+          "vital_interest_unreachable",
+          null
+        ],
+        "description": "Specific transfer exception type if an exception path is used.",
+        "example": null
+      },
+      "transfer_risk_assessment_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the transfer risk assessment required under the transfer regulation was completed.",
+        "example": true
+      },
+      "large_scale_or_continuous_transfer": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the transfer is continuous or large-scale, especially for sensitive data.",
+        "example": true
+      },
+      "processor_agreement_in_place": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether a processor agreement or equivalent written terms are in place.",
+        "example": true
+      },
+      "processor_compliance_verified": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether processor compliance and guarantees were verified by the controller.",
+        "example": true
+      },
+      "subprocessor_or_onward_transfer_controls": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether onward transfer and subprocessor controls are contractually addressed.",
+        "example": true
+      },
+      "records_of_processing_exists": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether records of processing activities exist.",
+        "example": true
+      },
+      "dpo_required": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the scenario indicates a DPO appointment obligation.",
+        "example": true
+      },
+      "dpo_assigned": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether the required DPO or responsible privacy contact has been assigned.",
+        "example": true
+      },
+      "processing_impact_assessment_completed": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether an internal processing impact assessment or similar review was completed for the activity.",
+        "example": true
+      },
+      "breach_response_72h_ready": {
+        "type": [
+          "boolean",
+          "null"
+        ],
+        "required": false,
+        "description": "Whether breach handling and 72-hour notification readiness is documented.",
+        "example": true
+      }
+    },
+    "derived_fields": {
+      "target_country": {
+        "type": [
+          "string",
+          "null"
+        ],
+        "description": "Country mapped from target_region."
+      },
+      "target_country_known": {
+        "type": "boolean",
+        "description": "Whether target_region could be mapped to a country code."
+      },
+      "transfer_outside_kingdom": {
+        "type": "boolean",
+        "description": "Whether the transfer destination is outside Saudi Arabia."
+      },
+      "appropriate_safeguards_available": {
+        "type": "boolean",
+        "description": "Whether binding common rules, standard contractual clauses, or certification/code safeguards are present."
+      },
+      "baseline_security_controls_ready": {
+        "type": "boolean",
+        "description": "Whether encryption at rest, encryption in transit, and access control are all confirmed."
+      },
+      "transfer_risk_assessment_required": {
+        "type": "boolean",
+        "description": "Whether a transfer risk assessment should have been completed under the transfer regulation."
+      }
+    }
+  },
+  "collection_strategy": {
+    "auto_sources": {
+      "cloud_config": [
+        "current_region",
+        "encryption_at_rest"
+      ],
+      "region_mapping": [
+        "target_country"
+      ]
+    },
+    "semi_auto_sources": {
+      "data_inventory": [
+        "data_type",
+        "contains_sensitive_data"
+      ],
+      "architecture_inference": [
+        "uses_processor",
+        "encryption_in_transit",
+        "access_control_in_place"
+      ]
+    },
+    "manual_sources": {
+      "business_and_privacy_questionnaire": [
+        "dataset_name",
+        "data_subject_connection",
+        "processing_purpose_defined",
+        "data_minimized",
+        "retention_period_defined",
+        "processing_legal_basis",
+        "explicit_consent_for_sensitive_data",
+        "privacy_policy_available",
+        "data_subject_rights_request_ready",
+        "consent_withdrawal_process_ready",
+        "data_accuracy_review_completed",
+        "privacy_notice_available",
+        "cross_border_notice_provided",
+        "target_region",
+        "adequate_protection_confirmed",
+        "binding_common_rules_approved",
+        "standard_contractual_clauses_in_place",
+        "certification_or_code_in_place",
+        "transfer_exception_used",
+        "transfer_exception_type",
+        "transfer_risk_assessment_completed",
+        "large_scale_or_continuous_transfer",
+        "processor_agreement_in_place",
+        "processor_compliance_verified",
+        "subprocessor_or_onward_transfer_controls",
+        "records_of_processing_exists",
+        "dpo_required",
+        "dpo_assigned",
+        "processing_impact_assessment_completed",
+        "breach_response_72h_ready"
+      ]
+    }
+  }
+}
