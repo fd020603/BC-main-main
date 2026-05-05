@@ -213,6 +213,90 @@ const saudiDatasetOptions: FieldOption[] = [
   },
 ];
 
+const taiwanDatasetOptions: FieldOption[] = [
+  {
+    value: "tw_customer_profiles",
+    label: "대만 고객 프로필 데이터",
+    description: "대만 고객의 이름, 연락처, 계정 상태처럼 서비스 제공에 필요한 기본 개인정보입니다.",
+  },
+  {
+    value: "tw_marketing_events",
+    label: "대만 마케팅 이벤트 데이터",
+    description: "대만 이용자의 캠페인 반응, 수신 동의, 쿠폰 사용 같은 마케팅 운영 데이터입니다.",
+  },
+  {
+    value: "tw_support_cases",
+    label: "대만 고객지원 케이스 데이터",
+    description: "문의 본문, 상담 이력, 처리 결과처럼 고객지원 업무에 쓰이는 기록입니다.",
+  },
+  {
+    value: "tw_employee_records",
+    label: "대만 인사 기록 데이터",
+    description: "대만 임직원의 계약, 근무, 급여 관련 정보처럼 접근 권한과 보관기간 관리가 필요한 데이터입니다.",
+  },
+  {
+    value: "tw_health_sensitive_cases",
+    label: "대만 건강·민감 케이스 데이터",
+    description: "건강, 생체, 민감 상담처럼 제6조 민감정보 예외 근거 검토가 필요한 데이터입니다.",
+  },
+];
+
+const lgpdDatasetOptions: FieldOption[] = [
+  {
+    value: "br_customer_profiles",
+    label: "브라질 고객 프로필 데이터",
+    description: "브라질 고객의 이름, 연락처, 계정 상태처럼 서비스 제공에 필요한 기본 개인정보입니다.",
+  },
+  {
+    value: "br_marketing_events",
+    label: "브라질 마케팅 이벤트 데이터",
+    description: "브라질 이용자의 캠페인 반응, 수신 동의, 쿠폰 사용 같은 마케팅 운영 데이터입니다.",
+  },
+  {
+    value: "br_support_cases",
+    label: "브라질 고객지원 케이스 데이터",
+    description: "문의 본문, 상담 이력, 처리 결과처럼 고객지원 업무에 쓰이는 기록입니다.",
+  },
+  {
+    value: "br_employee_records",
+    label: "브라질 인사 기록 데이터",
+    description: "브라질 임직원의 계약, 근무, 급여 관련 정보처럼 LGPD 기준의 보관과 권리대응 검토가 필요한 데이터입니다.",
+  },
+  {
+    value: "br_health_sensitive_cases",
+    label: "브라질 건강·민감 케이스 데이터",
+    description: "건강, 생체, 민감 상담처럼 LGPD 제11조 민감정보 근거 검토가 필요한 데이터입니다.",
+  },
+];
+
+const pipaDatasetOptions: FieldOption[] = [
+  {
+    value: "kr_customer_profiles",
+    label: "한국 고객 프로필 데이터",
+    description: "한국 고객의 이름, 연락처, 계정 상태처럼 서비스 제공에 필요한 기본 개인정보입니다.",
+  },
+  {
+    value: "kr_marketing_events",
+    label: "한국 마케팅 이벤트 데이터",
+    description: "한국 이용자의 광고성 정보 수신 동의, 캠페인 반응, 쿠폰 사용 같은 마케팅 운영 데이터입니다.",
+  },
+  {
+    value: "kr_support_cases",
+    label: "한국 고객지원 티켓 데이터",
+    description: "문의 본문, 상담 이력, 처리 결과처럼 고객지원 업무에 쓰이는 개인정보 기록입니다.",
+  },
+  {
+    value: "kr_employee_records",
+    label: "한국 인사 기록 데이터",
+    description: "한국 임직원의 계약, 근무, 급여 관련 정보처럼 접근 권한과 보관기간 관리가 필요한 데이터입니다.",
+  },
+  {
+    value: "kr_health_sensitive_cases",
+    label: "한국 건강·민감 케이스 데이터",
+    description: "건강, 생체, 민감 상담처럼 민감정보 또는 고유식별정보 여부 확인이 필요한 데이터입니다.",
+  },
+];
+
 const saudiLegalBasisOptions: FieldOption[] = [
   {
     value: "consent",
@@ -705,7 +789,7 @@ const taiwanSteps = [
     title: "대만 PDPA 검토 기본 정보",
     description: "처리 주체, 데이터 유형, 현재 위치와 대상 위치를 먼저 확인합니다.",
     fields: [
-      { key: "dataset_name", label: "데이터셋 명칭", helper: "검토할 데이터셋을 선택하세요.", kind: "select", options: emptyFirst(datasetOptions, "선택"), required: true },
+      { key: "dataset_name", label: "데이터셋 명칭", helper: "검토할 데이터셋을 선택하세요.", kind: "select", options: emptyFirst(taiwanDatasetOptions, "선택"), required: true },
       { key: "data_type", label: "데이터 유형", helper: "데이터 성격을 선택하세요.", kind: "select", options: emptyFirst(dataTypeOptions, "선택"), required: true },
       { key: "agency_type", label: "기관 유형", helper: "공공기관인지 비공공기관인지 선택하세요.", kind: "select", options: emptyFirst(taiwanAgencyOptions, "선택"), required: true },
       { key: "current_region", label: "현재 리전", helper: "현재 데이터가 저장 또는 처리되는 위치를 선택하세요.", kind: "select", options: emptyFirst(targetRegionOptions, "선택"), required: true },
@@ -893,7 +977,7 @@ const lgpdSteps = [
     title: "브라질 LGPD 검토",
     description: "브라질 연결성, 데이터 유형, 현재 위치와 대상 위치를 입력합니다.",
     fields: [
-      { key: "dataset_name", label: "데이터셋 명칭", helper: "검토할 데이터셋을 선택하세요.", kind: "select", options: emptyFirst(datasetOptions, "선택"), required: true },
+      { key: "dataset_name", label: "데이터셋 명칭", helper: "검토할 데이터셋을 선택하세요.", kind: "select", options: emptyFirst(lgpdDatasetOptions, "선택"), required: true },
       { key: "data_type", label: "데이터 유형", helper: "데이터 성격을 선택하세요.", kind: "select", options: emptyFirst(dataTypeOptions, "선택"), required: true },
       { key: "data_subject_connection", label: "브라질 연결성", helper: "브라질 거주자, 브라질 내 수집, 브라질 대상 서비스 등 적용 근거를 선택하세요.", kind: "select", options: emptyFirst(lgpdDataSubjectConnectionOptions, "선택"), required: true },
       { key: "current_region", label: "현재 리전", helper: "현재 데이터가 저장 또는 처리되는 위치를 선택하세요.", kind: "select", options: emptyFirst(targetRegionOptions, "선택"), required: true },
@@ -969,7 +1053,7 @@ const pipaSteps = [
     title: "한국 PIPA 검토 기본 정보",
     description: "한국 개인정보 처리와 국외이전 여부를 판단하기 위한 기본 정보를 입력합니다.",
     fields: [
-      { key: "dataset_name", label: "데이터셋 명칭", helper: "검토할 데이터셋을 선택하세요.", kind: "select", options: emptyFirst(datasetOptions, "선택"), required: true },
+      { key: "dataset_name", label: "데이터셋 명칭", helper: "검토할 데이터셋을 선택하세요.", kind: "select", options: emptyFirst(pipaDatasetOptions, "선택"), required: true },
       { key: "data_type", label: "데이터 유형", helper: "데이터 성격을 선택하세요.", kind: "select", options: emptyFirst(dataTypeOptions, "선택"), required: true },
       { key: "current_region", label: "현재 리전", helper: "현재 데이터가 저장 또는 처리되는 위치입니다.", kind: "select", options: emptyFirst(targetRegionOptions, "선택"), required: true },
       { key: "target_region", label: "대상 리전", helper: "이전 또는 복제 대상 위치입니다.", kind: "select", options: emptyFirst(targetRegionOptions, "선택"), required: true },
@@ -1402,7 +1486,7 @@ export const PACK_UI_DEFINITIONS: Record<string, PackUiDefinition> = {
       return notes.length > 0 ? notes : ["대만 PDPA 기준의 기본 수집·처리·국외전송 검토입니다."];
     },
     buildSummaryRows: (state) => [
-      { label: "데이터셋", value: getOptionLabel(datasetOptions, state.dataset_name) },
+      { label: "데이터셋", value: getOptionLabel(taiwanDatasetOptions, state.dataset_name) },
       { label: "기관 유형", value: getOptionLabel(taiwanAgencyOptions, state.agency_type) },
       { label: "리전 흐름", value: state.current_region && state.target_region ? `${state.current_region} -> ${state.target_region}` : "미선택" },
       { label: "국외전송", value: state.cross_border_transfer === "true" ? "예" : state.cross_border_transfer === "false" ? "아니오" : "미확인" },
@@ -1568,7 +1652,7 @@ export const PACK_UI_DEFINITIONS: Record<string, PackUiDefinition> = {
       return notes.length > 0 ? notes : ["브라질 LGPD 기준의 기본 처리·국제이전 검토입니다."];
     },
     buildSummaryRows: (state) => [
-      { label: "데이터셋", value: getOptionLabel(datasetOptions, state.dataset_name) },
+      { label: "데이터셋", value: getOptionLabel(lgpdDatasetOptions, state.dataset_name) },
       { label: "브라질 연결성", value: getOptionLabel(lgpdDataSubjectConnectionOptions, state.data_subject_connection) },
       { label: "리전 흐름", value: state.current_region && state.target_region ? `${state.current_region} -> ${state.target_region}` : "미선택" },
       { label: "처리 근거", value: getOptionLabel(lgpdBasisOptions, state.processing_legal_basis) },
@@ -1713,7 +1797,7 @@ export const PACK_UI_DEFINITIONS: Record<string, PackUiDefinition> = {
     buildSummaryRows: (state) => [
       {
         label: "데이터셋",
-        value: getOptionLabel(datasetOptions, state.dataset_name),
+        value: getOptionLabel(pipaDatasetOptions, state.dataset_name),
       },
       {
         label: "리전 흐름",

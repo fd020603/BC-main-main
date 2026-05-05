@@ -321,10 +321,10 @@ function buildReviewSections(
 }
 
 function mergeDefaultsForPack(packId: PackId, state: GuidedFormState) {
-  return {
+  return sanitizeDatasetForPack(packId, {
     ...PACK_UI_DEFINITIONS[packId].defaultState,
     ...state,
-  };
+  });
 }
 
 function normalizePackOrder(primaryPackId: PackId, comparisonPackIds: PackId[]) {
@@ -332,6 +332,34 @@ function normalizePackOrder(primaryPackId: PackId, comparisonPackIds: PackId[]) 
     primaryPackId,
     ...comparisonPackIds.filter((packId) => packId !== primaryPackId),
   ];
+}
+
+function getDatasetValuesForPack(packId: PackId) {
+  const datasetField = PACK_UI_DEFINITIONS[packId].steps
+    .flatMap((step) => step.fields)
+    .find((field) => field.key === "dataset_name");
+
+  return new Set(
+    (datasetField?.options ?? [])
+      .map((option) => option.value)
+      .filter(Boolean),
+  );
+}
+
+function sanitizeDatasetForPack(packId: PackId, state: GuidedFormState) {
+  if (!state.dataset_name) {
+    return state;
+  }
+
+  const datasetValues = getDatasetValuesForPack(packId);
+  if (datasetValues.has(state.dataset_name)) {
+    return state;
+  }
+
+  return {
+    ...state,
+    dataset_name: "",
+  };
 }
 
 function AwsSessionArea({
@@ -765,10 +793,7 @@ function GuidedFlowContent() {
           const bootPackId = bootDetectedPackId ?? "gdpr";
           setPackSummaries(supportedSummaries);
           setSelectedPackId(bootPackId);
-          setFormState({
-            ...PACK_UI_DEFINITIONS[bootPackId].defaultState,
-            ...parsedState,
-          });
+          setFormState(mergeDefaultsForPack(bootPackId, parsedState));
           setStorageReady(true);
         }
       } catch (error) {
@@ -942,7 +967,9 @@ function GuidedFlowContent() {
         next.human_review_available = "unknown";
       }
 
-      return next;
+      return nextDetectedPackId
+        ? sanitizeDatasetForPack(nextDetectedPackId, next)
+        : next;
     });
   }
 
@@ -998,7 +1025,7 @@ function GuidedFlowContent() {
           mapCloudDataForPack(packId, normalized),
         );
       }
-      return next;
+      return detectedFromAws ? sanitizeDatasetForPack(detectedFromAws, next) : next;
     });
     setStatusMessage(
       "AWS에서 확인 가능한 기술 입력값을 현재 세션에 반영했습니다. 법적 판단 항목은 질문 단계에서 계속 확인합니다.",
@@ -1020,7 +1047,10 @@ function GuidedFlowContent() {
         ? current.filter((item) => item !== packId)
         : [...current, packId],
     );
-    setFormState((current) => mergeDefaultsForPack(packId, current));
+    setFormState((current) => ({
+      ...PACK_UI_DEFINITIONS[packId].defaultState,
+      ...current,
+    }));
   }
 
   async function runEvaluation() {
