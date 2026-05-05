@@ -120,6 +120,20 @@ const decisionRiskLabel: Record<DecisionGrade, string> = {
   allow: "Low",
 };
 
+const decisionReasonTitle: Record<DecisionGrade, string> = {
+  deny: "왜 진행하면 안 되나요?",
+  manual_review: "왜 담당자 검토가 필요한가요?",
+  condition_allow: "어떤 조건을 채워야 진행할 수 있나요?",
+  allow: "왜 진행 가능하다고 보나요?",
+};
+
+const decisionReasonLead: Record<DecisionGrade, string> = {
+  deny: "아래 규칙이 차단 사유로 발동했습니다. 이 항목을 해결하기 전에는 운영 반영이나 데이터 이전을 진행하지 않는 것이 안전합니다.",
+  manual_review: "자동 판단만으로 결론을 확정하기 어려운 항목이 있습니다. 법무, 개인정보보호, 보안 담당자의 확인이 필요합니다.",
+  condition_allow: "진행 방향은 열려 있지만, 결과에 나온 보완 조치를 완료해야 실제 반영할 수 있습니다.",
+  allow: "현재 입력값 기준으로는 차단 사유가 강하게 발동하지 않았습니다. 다만 입력이 바뀌면 다시 평가해야 합니다.",
+};
+
 function isKnownCloudValue(value: unknown) {
   return value !== null && value !== undefined && value !== "";
 }
@@ -658,6 +672,27 @@ function PackResultCard({
     return null;
   }
 
+  const priorityRules =
+    result.triggered_rules.filter(
+      (rule) => rule.decision === result.final_decision,
+    ).length > 0
+      ? result.triggered_rules.filter(
+          (rule) => rule.decision === result.final_decision,
+        )
+      : result.triggered_rules;
+  const mainReasons = priorityRules.slice(0, 3);
+  const reasonItems = mainReasons.map((rule) => {
+    const reason = rule.rationale || rule.message;
+    return rule.article ? `${rule.article}: ${reason}` : reason;
+  });
+  const requiredActions = result.required_actions.length
+    ? result.required_actions
+    : mainReasons.flatMap((rule) => rule.required_actions).filter(Boolean);
+  const evidenceGaps =
+    result.qualitative_review_hints.evidence_gaps.length > 0
+      ? result.qualitative_review_hints.evidence_gaps
+      : mainReasons.flatMap((rule) => rule.required_evidence).filter(Boolean);
+
   return (
     <div className="rounded-lg border border-[var(--color-line)] bg-[var(--color-surface-strong)] p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -681,6 +716,92 @@ function PackResultCard({
         <SummaryRow label="final_decision" value={result.final_decision} />
         <SummaryRow label="risk_level" value={decisionRiskLabel[result.final_decision]} />
       </div>
+
+      <div className="mt-5 rounded-lg border border-[var(--color-line)] bg-white p-4">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+              Decision Reason
+            </p>
+            <h3 className="mt-2 text-lg font-semibold text-[var(--color-ink)]">
+              {decisionReasonTitle[result.final_decision]}
+            </h3>
+          </div>
+          <DecisionBadge decision={result.final_decision} compact />
+        </div>
+        <p className="mt-3 text-sm leading-7 text-[var(--color-muted)]">
+          {decisionReasonLead[result.final_decision]}
+        </p>
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <TextList
+            title="핵심 사유"
+            items={reasonItems}
+            emptyCopy={result.summary || "발동된 핵심 사유가 없습니다."}
+            compact
+          />
+          <TextList
+            title="먼저 해야 할 조치"
+            items={requiredActions.slice(0, 6)}
+            emptyCopy="추가 조치가 반환되지 않았습니다."
+            compact
+          />
+        </div>
+        {evidenceGaps.length > 0 ? (
+          <div className="mt-4">
+            <TextList
+              title="부족하거나 확인해야 할 증빙"
+              items={evidenceGaps.slice(0, 6)}
+              compact
+            />
+          </div>
+        ) : null}
+      </div>
+
+      {mainReasons.length > 0 ? (
+        <div className="mt-5 space-y-3">
+          <p className="text-sm font-semibold text-[var(--color-ink)]">
+            발동 규칙 상세
+          </p>
+          {mainReasons.map((rule, index) => (
+            <details
+              key={rule.rule_id}
+              className="rounded-lg border border-[var(--color-line)] bg-white p-4"
+              open={index === 0}
+            >
+              <summary className="cursor-pointer list-none">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--color-muted)]">
+                      Reason {index + 1} · {rule.article || rule.category}
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-[var(--color-ink)]">
+                      {rule.title}
+                    </p>
+                  </div>
+                  <DecisionBadge decision={rule.decision} compact />
+                </div>
+              </summary>
+              <p className="mt-4 text-sm leading-7 text-[var(--color-muted)]">
+                {rule.rationale || rule.message}
+              </p>
+              <div className="mt-4 grid gap-4 lg:grid-cols-2">
+                <TextList
+                  title="확인된 사실"
+                  items={rule.matched_facts}
+                  emptyCopy="확인된 사실이 없습니다."
+                  compact
+                />
+                <TextList
+                  title="필요 증빙"
+                  items={rule.required_evidence}
+                  emptyCopy="추가 증빙 요구가 없습니다."
+                  compact
+                />
+              </div>
+            </details>
+          ))}
+        </div>
+      ) : null}
 
       <div className="mt-5 grid gap-4 lg:grid-cols-2">
         <TextList

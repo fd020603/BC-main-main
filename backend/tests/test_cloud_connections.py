@@ -7,6 +7,7 @@ from app.main import app
 from app.schemas.cloud_connections import AWSAccessKeyS3CheckRequest
 from app.services.cloud_discovery.aws_s3_review_service import (
     build_s3_client_from_access_keys,
+    check_s3_bucket_with_client,
     collect_s3_discovery_with_client,
 )
 
@@ -56,6 +57,13 @@ class FakeS3Client:
         }
 
 
+class FakeNoTagsS3Client(FakeS3Client):
+    def get_bucket_tagging(self, Bucket):
+        error = Exception("NoSuchTagSet")
+        error.response = {"Error": {"Code": "NoSuchTagSet"}}  # type: ignore[attr-defined]
+        raise error
+
+
 class CloudConnectionTests(unittest.TestCase):
     def test_aws_connection_start_returns_external_id_and_console_url(self):
         client = TestClient(app)
@@ -87,6 +95,24 @@ class CloudConnectionTests(unittest.TestCase):
         self.assertEqual(raw["data_type"], "customer_records")
         self.assertFalse(raw["contains_sensitive_data"])
         self.assertTrue(raw["uses_processor"])
+
+    def test_s3_check_succeeds_without_business_tags(self):
+        result = check_s3_bucket_with_client(FakeNoTagsS3Client(), "commercial-bucket")
+
+        normalized = result["normalized_cloud_data"]
+        self.assertEqual(normalized["current_region"], "ap-northeast-2")
+        self.assertTrue(normalized["encryption_at_rest"])
+        self.assertTrue(normalized["encryption_in_transit"])
+        self.assertTrue(normalized["access_control_in_place"])
+        self.assertIsNone(normalized["data_type"])
+        self.assertIsNone(normalized["contains_sensitive_data"])
+        self.assertIsNone(normalized["uses_processor"])
+        self.assertIn("data_type", result["missing_items"])
+        self.assertIn("contains_sensitive_data", result["missing_items"])
+        self.assertIn("uses_processor", result["missing_items"])
+        self.assertTrue(
+            any("수동 확인" in warning for warning in result["warnings"])
+        )
 
     def test_access_key_schema_masks_secret_values(self):
         request = AWSAccessKeyS3CheckRequest(

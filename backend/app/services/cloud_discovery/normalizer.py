@@ -9,8 +9,8 @@ from app.services.cloud_discovery.types import (
 
 
 SENSITIVE_WARNING = (
-    "contains_sensitive_data cannot be confirmed without Macie/Purview/"
-    "classification result or manual review."
+    "contains_sensitive_data cannot be confirmed without classification, "
+    "resource tag, or manual review."
 )
 
 

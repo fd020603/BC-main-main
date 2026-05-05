@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { useAwsIntegration } from "./context/aws-integration-context";
 import { buildErrorMessage, fetchJson, formatJson } from "./workspace-runtime";
 import type {
   AwsConnectionCompleteResponse,
@@ -10,9 +11,46 @@ import type {
   JsonObject,
 } from "./workspace-types";
 import { ActionButton, ErrorBanner, TextList } from "./workspace-ui";
-import { useAwsIntegration } from "./context/aws-integration-context";
 
 const DEFAULT_AWS_CONSOLE_REGION = "ap-northeast-2";
+
+const technicalFields = [
+  "current_region",
+  "encryption_at_rest",
+  "encryption_in_transit",
+  "access_control_in_place",
+] as const;
+
+const businessTagFields = [
+  "data_type",
+  "contains_sensitive_data",
+  "uses_processor",
+] as const;
+
+const manualLegalFields = [
+  "legal_basis",
+  "notice_provided",
+  "consent_obtained",
+  "transfer_exception",
+  "risk_assessment",
+  "dpo_review",
+];
+
+const fieldLabels: Record<string, string> = {
+  current_region: "현재 리전",
+  encryption_at_rest: "저장 시 암호화",
+  encryption_in_transit: "전송 시 암호화",
+  access_control_in_place: "Public Access Block",
+  data_type: "데이터 유형",
+  contains_sensitive_data: "민감정보 포함 여부",
+  uses_processor: "외부 처리자 사용 여부",
+  legal_basis: "적법근거",
+  notice_provided: "고지 제공",
+  consent_obtained: "동의 확보",
+  transfer_exception: "이전 예외",
+  risk_assessment: "위험평가",
+  dpo_review: "DPO/개인정보 담당자 검토",
+};
 
 function valueLabel(value: unknown) {
   if (value === true) {
@@ -27,20 +65,8 @@ function valueLabel(value: unknown) {
   return String(value);
 }
 
-function nullExplanation(field: string, value: unknown) {
-  if (value !== null && value !== undefined && value !== "") {
-    return "";
-  }
-  if (field === "contains_sensitive_data") {
-    return "contains_sensitive_data는 AWS가 자동 판별하는 값이 아니라 S3 태그에서 가져오는 값입니다.";
-  }
-  if (field === "data_type") {
-    return "data_type은 S3 태그에서 가져오는 값입니다.";
-  }
-  if (field === "uses_processor") {
-    return "uses_processor는 S3 태그에서 가져오는 값입니다.";
-  }
-  return "";
+function isKnownValue(value: unknown) {
+  return value !== null && value !== undefined && value !== "";
 }
 
 function formatCheckedAt(value: string | null) {
@@ -62,59 +88,109 @@ function getNormalizedCloudData(result: AwsS3CheckResponse) {
 
 function ResultCards({ result }: { result: AwsS3CheckResponse }) {
   const normalized = getNormalizedCloudData(result);
-  const rows = [
-    ["current_region", normalized.current_region],
-    ["encryption_at_rest", normalized.encryption_at_rest],
-    ["encryption_in_transit", normalized.encryption_in_transit],
-    ["access_control_in_place", normalized.access_control_in_place],
-    ["data_type", normalized.data_type],
-    ["contains_sensitive_data", normalized.contains_sensitive_data],
-    ["uses_processor", normalized.uses_processor],
-  ];
+  const businessMissing = businessTagFields.filter(
+    (field) => !isKnownValue(normalized[field]),
+  );
 
   return (
     <div className="mt-5 grid gap-4 lg:grid-cols-2">
+      <div className="rounded-lg border border-[var(--color-success)] bg-[var(--color-success-soft)] p-4 lg:col-span-2">
+        <p className="text-sm font-semibold text-[var(--color-success)]">
+          AWS 연결/버킷 조회 성공
+        </p>
+        <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
+          S3에서 확인 가능한 기술 설정은 자동 수집했습니다.
+          {businessMissing.length > 0
+            ? " 다만 일부 업무/데이터 속성은 S3 태그가 없어 수동 확인이 필요합니다."
+            : " S3 태그 기반 업무/데이터 속성도 확인되었습니다."}
+        </p>
+      </div>
+
       <div className="rounded-lg border border-[var(--color-line)] bg-white p-4">
         <p className="text-sm font-semibold text-[var(--color-ink)]">
-          AWS 검사 결과
+          AWS에서 자동 확인된 기술 설정
         </p>
         <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--color-muted)]">
-          {rows.map(([field, value]) => {
-            const fieldName = String(field);
-            const missing = result.missing_items.includes(fieldName);
-            const explanation = nullExplanation(fieldName, value);
+          {technicalFields.map((field) => {
+            const value = normalized[field];
+            const known = isKnownValue(value);
             return (
-              <li key={fieldName} className="flex items-start gap-2">
+              <li key={field} className="flex items-start gap-2">
                 <span
                   className={
-                    missing
-                      ? "font-semibold text-[var(--color-warning)]"
-                      : "font-semibold text-[var(--color-success)]"
+                    known && value !== false
+                      ? "font-semibold text-[var(--color-success)]"
+                      : "font-semibold text-[var(--color-warning)]"
                   }
                 >
-                  {missing ? "주의" : "✓"}
+                  {known && value !== false ? "확인됨" : "확인 필요"}
                 </span>
                 <span>
                   <span className="font-semibold text-[var(--color-ink)]">
-                    {fieldName}
+                    {fieldLabels[field]}
                   </span>
                   : {valueLabel(value)}
-                  {explanation ? (
-                    <span className="mt-1 block text-xs leading-5 text-[var(--color-muted)]">
-                      {explanation}
-                    </span>
-                  ) : null}
+                  <span className="mt-1 block text-xs leading-5 text-[var(--color-muted)]">
+                    {known
+                      ? value === false
+                        ? "AWS API에서 확인됨 · 권장 기준 보완 필요"
+                        : "AWS API에서 확인됨"
+                      : "AWS에서 자동 확인 불가"}
+                  </span>
                 </span>
               </li>
             );
           })}
         </ul>
       </div>
+
+      <div className="rounded-lg border border-[var(--color-line)] bg-white p-4">
+        <p className="text-sm font-semibold text-[var(--color-ink)]">
+          태그 기반으로 확인된 업무/데이터 속성
+        </p>
+        <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--color-muted)]">
+          {businessTagFields.map((field) => {
+            const value = normalized[field];
+            const known = isKnownValue(value);
+            return (
+              <li key={field} className="flex items-start gap-2">
+                <span
+                  className={
+                    known
+                      ? "font-semibold text-[var(--color-success)]"
+                      : "font-semibold text-[var(--color-warning)]"
+                  }
+                >
+                  {known ? "태그 확인" : "수동 필요"}
+                </span>
+                <span>
+                  <span className="font-semibold text-[var(--color-ink)]">
+                    {fieldLabels[field]}
+                  </span>
+                  : {valueLabel(value)}
+                  <span className="mt-1 block text-xs leading-5 text-[var(--color-muted)]">
+                    {known
+                      ? "S3 태그에서 확인됨"
+                      : "태그 없음 · 수동 확인 필요"}
+                  </span>
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      <TextList
+        title="사람이 직접 확인해야 하는 법적 판단 항목"
+        items={manualLegalFields.map((field) => fieldLabels[field])}
+        compact
+      />
+
       <div className="space-y-4">
         <TextList
-          title="누락 또는 확인 필요"
+          title="수동 확인 또는 보완 필요"
           items={result.missing_items}
-          emptyCopy="권장 설정이 확인되었습니다."
+          emptyCopy="현재 응답 기준으로 부족한 항목이 없습니다."
           compact
         />
         <TextList
@@ -124,13 +200,14 @@ function ResultCards({ result }: { result: AwsS3CheckResponse }) {
           compact
         />
       </div>
+
       <div className="rounded-lg border border-[var(--color-line)] bg-white p-4 lg:col-span-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm font-semibold text-[var(--color-ink)]">
             normalized_cloud_data
           </p>
           <span className="rounded-full bg-[var(--color-success-soft)] px-3 py-1 text-xs font-semibold text-[var(--color-success)]">
-            이미 평가 입력값에 반영됨
+            현재 세션 입력값에 반영됨
           </span>
         </div>
         <pre className="code-block mt-3 max-h-64 overflow-auto rounded-lg p-3 text-xs leading-5">
@@ -207,10 +284,10 @@ export function AwsIntegrationPanel({
 
   function requireKeyInputs() {
     if (!aws.accessKeyId.trim() || !aws.secretAccessKey.trim()) {
-      throw new Error("Access Key ID와 Secret Access Key를 입력해 주세요.");
+      throw new Error("Access Key ID와 Secret Access Key를 입력하세요.");
     }
     if (!aws.bucketName.trim()) {
-      throw new Error("검사할 S3 Bucket Name을 입력해 주세요.");
+      throw new Error("검사할 S3 Bucket Name을 입력하세요.");
     }
   }
 
@@ -267,10 +344,10 @@ export function AwsIntegrationPanel({
 
   async function completeRoleConnection() {
     if (!connectionId) {
-      throw new Error("AWS 연결 시작을 먼저 눌러 주세요.");
+      throw new Error("AWS 연결 시작을 먼저 실행하세요.");
     }
     if (!aws.roleArn.trim()) {
-      throw new Error("CloudFormation 출력의 Role ARN을 입력해 주세요.");
+      throw new Error("CloudFormation 출력의 Role ARN을 입력하세요.");
     }
     const response = await fetchJson<AwsConnectionCompleteResponse>(
       "/api/v1/cloud-connections/aws/complete",
@@ -287,10 +364,10 @@ export function AwsIntegrationPanel({
 
   async function checkWithRole() {
     if (!connectionId || !roleConnected) {
-      throw new Error("AWS 연결 확인을 먼저 완료해 주세요.");
+      throw new Error("AWS 연결 확인을 먼저 완료하세요.");
     }
     if (!aws.bucketName.trim()) {
-      throw new Error("검사할 S3 Bucket Name을 입력해 주세요.");
+      throw new Error("검사할 S3 Bucket Name을 입력하세요.");
     }
     const response = await fetchJson<AwsS3CheckResponse>(
       "/api/v1/cloud-discovery/aws/s3/check",
@@ -307,10 +384,10 @@ export function AwsIntegrationPanel({
 
   async function applyWithRole() {
     if (!connectionId || !roleConnected) {
-      throw new Error("AWS 연결 확인을 먼저 완료해 주세요.");
+      throw new Error("AWS 연결 확인을 먼저 완료하세요.");
     }
     if (!aws.bucketName.trim()) {
-      throw new Error("설정을 적용할 S3 Bucket Name을 입력해 주세요.");
+      throw new Error("설정을 적용할 S3 Bucket Name을 입력하세요.");
     }
     const response = await fetchJson<AwsS3CheckResponse>(
       "/api/v1/cloud-discovery/aws/s3/apply-recommended-settings",
@@ -369,7 +446,7 @@ export function AwsIntegrationPanel({
           AWS 연동 정보 지우기
         </h3>
         <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
-          Access Key와 현재 AWS 연동 상태를 지웁니다. 이미 평가 입력값에 반영된 AWS 수집값도 함께 초기화할 수 있습니다.
+          현재 세션의 AWS 연동 상태를 지웁니다. 이미 평가 입력값에 반영된 AWS 수집값도 함께 초기화할 수 있습니다.
         </p>
         <div className="mt-5 grid gap-2">
           <button
@@ -402,20 +479,21 @@ export function AwsIntegrationPanel({
 
   const applyPreviewDialog = isApplyPreviewOpen ? (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-4">
-      <div className="w-full max-w-lg rounded-lg border border-[var(--color-line)] bg-white p-5 shadow-xl">
-        <h3 className="text-lg font-semibold text-[var(--color-ink)]">
-          권장 설정 적용 미리보기
+      <div className="w-full max-w-lg rounded-lg border border-[var(--color-warning)] bg-white p-5 shadow-xl">
+        <h3 className="text-lg font-semibold text-[var(--color-warning)]">
+          버킷 설정을 변경합니다
         </h3>
         <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
-          아래 항목을 기준으로 S3 버킷 설정을 변경합니다. 버킷 암호화, Public Access Block, HTTPS 전송 정책, 기존에 확인된 태그 값이 적용 대상입니다.
+          이 작업은 실제 S3 버킷의 기본 암호화, Public Access Block, HTTPS 강제 bucket policy를 변경할 수 있습니다. 운영 버킷에서는 변경 범위와 권한을 먼저 확인하세요.
         </p>
         <TextList
           title="변경 또는 확인 예정 항목"
-          items={
-            aws.missingItems.length > 0
-              ? aws.missingItems
-              : ["권장 보안 설정 재확인"]
-          }
+          items={[
+            "기본 서버 측 암호화 설정",
+            "Public Access Block 설정",
+            "aws:SecureTransport=false 요청 거부 bucket policy",
+            "이미 알고 있는 data_type, contains_sensitive_data, uses_processor 태그 값",
+          ]}
           compact
         />
         <div className="mt-5 flex flex-wrap justify-end gap-3">
@@ -425,7 +503,7 @@ export function AwsIntegrationPanel({
             variant="secondary"
           />
           <ActionButton
-            label="선택한 설정 적용"
+            label="버킷 설정 변경"
             onClick={() => void confirmApplyRecommendedSettings()}
             active={aws.activeAction === "apply"}
             disabled={aws.activeAction !== null}
@@ -448,17 +526,17 @@ export function AwsIntegrationPanel({
             </h2>
             {aws.isAwsConnected ? (
               <div className="mt-3 grid gap-2 text-sm leading-6 text-[var(--color-muted)] sm:grid-cols-2">
-                <p>방식: {aws.connectionMode === "access_key" ? "Access Key 간편 연결" : "IAM Role 보안 연결"}</p>
+                <p>방식: {aws.connectionMode === "access_key" ? "Access Key" : "IAM Role"}</p>
                 <p>Bucket: {aws.bucketName || "-"}</p>
                 <p>Region: {aws.region || "-"}</p>
-                <p>마지막 검사 시간: {formatCheckedAt(aws.lastCheckedAt)}</p>
+                <p>마지막 검사: {formatCheckedAt(aws.lastCheckedAt)}</p>
                 <p>저장 시 암호화: {valueLabel(aws.discoveredValues.encryption_at_rest)}</p>
-                <p>전송 중 암호화: {valueLabel(aws.discoveredValues.encryption_in_transit)}</p>
+                <p>전송 시 암호화: {valueLabel(aws.discoveredValues.encryption_in_transit)}</p>
                 <p>접근 제어: {valueLabel(aws.discoveredValues.access_control_in_place)}</p>
               </div>
             ) : (
               <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
-                AWS에서 S3 보안 설정을 한 번 가져오면 평가 단계 전체에 자동 반영됩니다.
+                S3 버킷의 기술 설정은 AWS API로 확인하고, 업무/데이터 속성은 표준 S3 태그가 있을 때만 자동 반영합니다.
               </p>
             )}
           </div>
@@ -479,7 +557,7 @@ export function AwsIntegrationPanel({
                   variant="secondary"
                 />
                 <ActionButton
-                  label="권장 설정 적용 미리보기"
+                  label="권장 설정 적용"
                   onClick={() => setIsApplyPreviewOpen(true)}
                   active={aws.activeAction === "apply"}
                   disabled={aws.activeAction !== null}
@@ -491,7 +569,7 @@ export function AwsIntegrationPanel({
                   disabled={aws.activeAction !== null}
                 />
                 <ActionButton
-                  label="키 입력값 지우기"
+                  label="AWS 입력값 지우기"
                   onClick={() => setIsClearDialogOpen(true)}
                   disabled={aws.activeAction !== null}
                   variant="secondary"
@@ -519,17 +597,17 @@ export function AwsIntegrationPanel({
           AWS Integration
         </p>
         <h2 className="mt-2 text-xl font-semibold text-[var(--color-ink)]">
-          AWS 온라인 연동
+          AWS S3 버킷 검사
         </h2>
         <p className="mt-2 text-sm leading-6 text-[var(--color-muted)]">
-          입력한 AWS 키는 저장하지 않고 현재 요청 처리에만 사용됩니다. 페이지를 새로고침하면 다시 입력해야 합니다. 운영 환경에서는 IAM Role 기반 보안 연결을 권장합니다.
+          일반 상용 S3 버킷에서도 리전, 암호화, Public Access Block, HTTPS 강제 정책은 AWS API로 확인합니다. data_type, contains_sensitive_data, uses_processor는 S3 태그가 없으면 수동 입력으로 남깁니다.
         </p>
       </div>
 
       <div className="mt-5 flex flex-wrap gap-2">
         {[
-          ["keys", "간편 연결 - Access Key"],
-          ["role", "보안 연결 - IAM Role"],
+          ["keys", "Access Key"],
+          ["role", "IAM Role"],
         ].map(([value, label]) => (
           <button
             key={value}
@@ -592,20 +670,20 @@ export function AwsIntegrationPanel({
           </div>
           <div className="flex flex-wrap gap-3">
             <ActionButton
-              label="버킷 검사하기"
+              label="버킷 검사"
               onClick={() => void withAction("check-keys", checkWithKeys)}
               active={aws.activeAction === "check-keys"}
               disabled={aws.activeAction !== null}
             />
             <ActionButton
-              label="권장 설정 적용 미리보기"
+              label="권장 설정 적용"
               onClick={() => setIsApplyPreviewOpen(true)}
               active={aws.activeAction === "apply"}
               disabled={aws.activeAction !== null}
               variant="secondary"
             />
             <ActionButton
-              label="키 입력값 지우기"
+              label="AWS 입력값 지우기"
               onClick={() => setIsClearDialogOpen(true)}
               disabled={aws.activeAction !== null}
               variant="secondary"
@@ -690,13 +768,13 @@ export function AwsIntegrationPanel({
           {roleConnected ? (
             <div className="flex flex-wrap gap-3">
               <ActionButton
-                label="버킷 검사하기"
+                label="버킷 검사"
                 onClick={() => void withAction("check-role", checkWithRole)}
                 active={aws.activeAction === "check-role"}
                 disabled={aws.activeAction !== null}
               />
               <ActionButton
-                label="권장 설정 적용 미리보기"
+                label="권장 설정 적용"
                 onClick={() => setIsApplyPreviewOpen(true)}
                 active={aws.activeAction === "apply"}
                 disabled={aws.activeAction !== null}
@@ -714,9 +792,7 @@ export function AwsIntegrationPanel({
       ) : null}
 
       {aws.errorMessage ? <ErrorBanner message={aws.errorMessage} /> : null}
-      {aws.lastCheckResult ? (
-        <ResultCards result={aws.lastCheckResult} />
-      ) : null}
+      {aws.lastCheckResult ? <ResultCards result={aws.lastCheckResult} /> : null}
       {clearDialog}
       {applyPreviewDialog}
     </section>

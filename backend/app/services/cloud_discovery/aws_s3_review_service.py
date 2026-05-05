@@ -235,6 +235,36 @@ def _null_warnings(normalized: Dict[str, Any]) -> list[str]:
     return warnings
 
 
+def _read_warning(action: str, error: Exception) -> str:
+    code = _client_error_code(error)
+    if code in {"AccessDenied", "UnauthorizedOperation"}:
+        return f"{action} 읽기 권한이 없어 해당 값은 unknown으로 처리했습니다."
+    if code in {
+        "NoSuchTagSet",
+        "ServerSideEncryptionConfigurationNotFoundError",
+        "NoSuchBucketPolicy",
+    }:
+        return f"{action} 설정이 없어서 해당 값은 null/unknown으로 처리했습니다."
+    return f"{action} 조회 중 오류가 발생해 해당 값은 unknown으로 처리했습니다."
+
+
+def _null_warnings(normalized: Dict[str, Any]) -> list[str]:
+    warnings: list[str] = []
+    if normalized.get("contains_sensitive_data") is None:
+        warnings.append(
+            "contains_sensitive_data는 AWS 기본 속성이 아니므로 S3 태그가 없으면 수동 확인이 필요합니다."
+        )
+    if normalized.get("uses_processor") is None:
+        warnings.append(
+            "uses_processor는 AWS 기본 속성이 아니므로 S3 태그가 없으면 수동 확인이 필요합니다."
+        )
+    if not normalized.get("data_type"):
+        warnings.append(
+            "data_type은 AWS 기본 속성이 아니므로 S3 태그가 없으면 수동 확인이 필요합니다."
+        )
+    return warnings
+
+
 def check_s3_bucket_with_client(
     s3_client,
     bucket_name: str,
