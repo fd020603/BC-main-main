@@ -277,6 +277,7 @@ cd backend
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
+pip install boto3  #ACCESS KEY 기반 연동 시 필요
 uvicorn app.main:app --reload
 ```
 
